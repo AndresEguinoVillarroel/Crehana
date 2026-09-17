@@ -1,0 +1,13 @@
+:root{
+  --canvas:#F6F5FB; --panel:#FFFFFF; --soft:#F4F2FE; --soft2:#FAFAFD;
+  --ink:#140058; --ink2:#45485F; --muted:#767A90;
+  --line:#E7E6F0; --line2:#EFEEF6;
+  --brand:#4822F4; --brand-dark:#3718CC; --brand-wash:#EDE9FE;
+  --deep:#140058; --brand-2:#6556FF;
+  --lime:#D6FD6A; --lime-ink:#3F4F06;
+  --crit:#D33A2C; --warn:#B4740B; --ok:#128A5E; --info:#2A5BC7;
+  --crit-w:#FDEEEC; --warn-w:#FDF5E6; --ok-w:#E8F6F0; --info-w:#ECF1FC;
+  --display:"Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --sans:"Inter", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}

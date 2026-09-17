@@ -1,0 +1,1768 @@
+{
+  "BUK": {
+    "id": "buk",
+    "nombre": "Buk",
+    "sitio": "buk.cl",
+    "pais": "CL · PE · CO · MX",
+    "frente": "Marketing y diseño",
+    "tipo": "competidor",
+    "estado": "activo",
+    "corrida": {
+      "n": 1,
+      "id": "2026-W38",
+      "fecha": "15 sep 2026"
+    },
+    "tesis": {
+      "titulo": "Buk no compite con contenido. Compite con datos propios.",
+      "cuerpo": "Su activo de marketing más fuerte no es una campaña: es un observatorio del mercado laboral construido con su propia nómina — 700.000 trabajadores, actualizado cada mes, citado por prensa cada trimestre. Eso no se contraataca con más posts, sino con el dato que Crehana sí tiene: qué pasa cuando 1.200 empresas forman a su gente.",
+      "resalte": "un observatorio del mercado laboral construido con su propia nómina"
+    },
+    "kpis": [
+      {
+        "n": "+10.000",
+        "l": "“Clientes felices” en el hero",
+        "s": "buk.cl · home"
+      },
+      {
+        "n": "2M",
+        "l": "Usuarios en la plataforma",
+        "s": "5 países"
+      },
+      {
+        "n": "60%",
+        "l": "Menos tiempo administrativo",
+        "s": "claim principal"
+      },
+      {
+        "n": "700K",
+        "l": "Trabajadores tras su observatorio",
+        "s": "~15–18% empleo formal CL"
+      }
+    ],
+    "aviso": "La biblioteca de anuncios de Meta bloquea el acceso automatizado, así que los ads pagados de Buk todavía no están cubiertos. Todo lo de abajo viene de fuentes abiertas verificadas el 15 de septiembre.",
+    "senales": [
+      {
+        "id": "f1",
+        "sev": "crit",
+        "cat": "Contenido · datos propios",
+        "t": "Buk convirtió su nómina en un medio",
+        "d": "mercadolaboral.buk.cl es un microsite propio con indicadores de empleo, rotación, renuncias vs. despidos y remuneraciones, construido con los registros de más de 700.000 trabajadores de sus clientes. Se actualiza cada mes, con reportes descargables, y la prensa lo levanta como fuente citable.",
+        "w": "Es un motor de PR, SEO y autoridad que no se compite con volumen de contenido, sino con datos propios. Es el movimiento que Crehana puede replicar con lo que sí tiene y Buk no: datos de aprendizaje y desempeño de 1.200 empresas.",
+        "vs": {
+          "ellos": "Microsite de datos propios, mensual, citado por prensa como fuente del mercado laboral chileno.",
+          "nos": "Crehana tiene datos de aprendizaje y desempeño de 1.200 empresas, pero ninguno es público ni citable. No hay observatorio ni reporte recurrente.",
+          "saldo": "ellos",
+          "texto": "Ventaja Buk"
+        },
+        "src": [
+          {
+            "t": "mercadolaboral.buk.cl",
+            "u": "https://mercadolaboral.buk.cl/"
+          }
+        ],
+        "ver": "verificado 15 sep 2026"
+      },
+      {
+        "id": "f2",
+        "sev": "warn",
+        "cat": "Mensaje · posicionamiento",
+        "t": "El titular del home ahora dice “Personas y Finanzas”",
+        "d": "Hero actual: “Software de Gestión de Personas y Finanzas con Inteligencia Artificial”. La bajada habla de automatizar, centralizar y “convertir datos en información estratégica”, y cierra en “lugares de trabajo más felices”. CTA primario “Cotiza aquí”, secundario “Ver videos demo”.",
+        "w": "Están ampliando el mensaje, no afinándolo. Un titular que cubre personas, finanzas e IA a la vez es difícil de defender creativamente, y un competidor con territorio estrecho gana contraste — lo único que Crehana compra más barato que ellos.",
+        "vs": {
+          "ellos": "“Software de Gestión de Personas y Finanzas con Inteligencia Artificial”. Cubre personas, finanzas e IA a la vez.",
+          "nos": "“El software de HR que acompaña todo el journey del talento”, con “simple, modular y potenciada por AI”. Más estrecho que Buk y con el journey como territorio, pero la bajada también abre a todo HR.",
+          "saldo": "par",
+          "texto": "Paridad"
+        },
+        "src": [
+          {
+            "t": "buk.cl",
+            "u": "https://www.buk.cl/"
+          }
+        ],
+        "ver": "verificado 15 sep 2026"
+      },
+      {
+        "id": "f3",
+        "sev": "warn",
+        "cat": "Formato · lead magnet",
+        "t": "Estudios gated, replicados país por país",
+        "d": "“Estudio Tendencias HR 2026”: informe extenso con metodología declarada (120+ artículos internacionales y 40+ informes institucionales), detrás de un formulario de descarga. El mismo formato se repite en buk.pe, buk.cl, buk.co y buk.mx con adaptación local.",
+        "w": "Producción editorial de bajo costo creativo y alto retorno: un estudio alimenta leads, social, blog y prensa, multiplicado por cuatro países. La plantilla es copiable esta semana.",
+        "vs": {
+          "ellos": "Un estudio anual con metodología declarada, gated, replicado y localizado en cuatro países.",
+          "nos": "Crehana tiene sección de Recursos y blog activo, pero ningún estudio insignia anual con metodología propia ni versión por país.",
+          "saldo": "ellos",
+          "texto": "Ventaja Buk"
+        },
+        "src": [
+          {
+            "t": "buk.pe · Estudio Tendencias HR 2026",
+            "u": "https://www.buk.pe/recursos/estudios-de-gestion-de-personas/estudio-tendencias-hr-2026"
+          }
+        ],
+        "ver": ""
+      },
+      {
+        "id": "f4",
+        "sev": "info",
+        "cat": "Producción · despiece",
+        "t": "Un evento, decenas de piezas",
+        "d": "Dos formatos recurrentes — “Lo Nuevo de Buk” (novedades de producto por trimestre) y “Tendencias de Recursos Humanos” — que luego se despiezan en shorts de YouTube y notas de blog. Además publican un roadmap de producto abierto, filtrable por módulo.",
+        "w": "No es ventaja creativa, es economía de producción: un rodaje llena el calendario del trimestre. Para un equipo de diseño con capacidad limitada, este es el modelo a copiar antes que cualquier pieza suelta.",
+        "vs": {
+          "ellos": "Dos formatos de evento recurrentes más roadmap público: un rodaje alimenta el calendario del trimestre.",
+          "nos": "Crehana produce contenido y tiene Crehana AI como bandera, pero sin evento de producto recurrente ni cadena de despiece definida. Cada pieza se diseña desde cero.",
+          "saldo": "ellos",
+          "texto": "Ventaja Buk"
+        },
+        "src": [
+          {
+            "t": "Lo Nuevo de Buk",
+            "u": "https://www.buk.cl/blog/lo-nuevo-de-buk-live-updates"
+          },
+          {
+            "t": "roadmap público",
+            "u": "https://www.buk.cl/productos/roadmap-novedades-productos"
+          }
+        ],
+        "ver": ""
+      },
+      {
+        "id": "f5",
+        "sev": "ok",
+        "cat": "Territorio · mensaje",
+        "t": "Toda su prueba social es administrativa",
+        "d": "Lo que ponen al frente: tiempo administrativo ahorrado, cantidad de usuarios, velocidad de soporte, certificaciones (Empresa B, ISO 27001, SOC-2) y un muro de logos enterprise — Falabella, BTG Pactual, BICE, Notco, Wom. No hay una sola métrica de desarrollo de personas.",
+        "w": "Es un hueco de territorio, no de presupuesto. Buk no puede reclamar resultado de aprendizaje porque no produce el contenido ni mide el desarrollo. Ese es el terreno donde Crehana llega primero y con evidencia.",
+        "vs": {
+          "ellos": "Tiempo ahorrado, usuarios, soporte, certificaciones y muro de logos. Cero métricas de desarrollo.",
+          "nos": "Crehana ya muestra Nine Box, evaluación de clima, avance de tareas y 4,6/5 en Capterra: tiene la evidencia de desarrollo, pero la presenta como capturas de producto, no como resultado del negocio.",
+          "saldo": "nos",
+          "texto": "Ventaja Crehana"
+        },
+        "src": [
+          {
+            "t": "buk.cl",
+            "u": "https://www.buk.cl/"
+          }
+        ],
+        "ver": "casos y certificaciones"
+      },
+      {
+        "id": "f6",
+        "sev": "info",
+        "cat": "Sistema visual",
+        "t": "Su gráfica es SaaS corporativo sin riesgo",
+        "d": "Landing muy modular: cinco pilares de producto con iconografía simétrica, capturas de dashboard como visual principal, retratos ejecutivos en testimonios, layout limpio y sans-serif neutra. Diseño construido para no fallar, no para recordarse.",
+        "w": "Es la vulnerabilidad más barata de explotar. Una marca con herencia creativa gana distinción visual sin igualar su presupuesto de medios, y en una categoría donde todos se ven igual, verse distinto es performance.",
+        "vs": {
+          "ellos": "Modular, iconografía simétrica, sans neutra, capturas de dashboard. Construido para no fallar.",
+          "nos": "Crehana ya tiene activos con más carácter: morado propio, resaltado lima sobre el copy y una itálica serif en “talento”. La distinción existe en el home; falta llevarla a campañas y piezas de social.",
+          "saldo": "nos",
+          "texto": "Ventaja Crehana"
+        },
+        "src": [
+          {
+            "t": "buk.cl",
+            "u": "https://www.buk.cl/"
+          }
+        ],
+        "ver": "lectura fina del sistema visual pendiente"
+      }
+    ],
+    "ocupado": [
+      "Ahorro de tiempo administrativo",
+      "Escala: 10.000 clientes",
+      "Confianza enterprise",
+      "Certificaciones y seguridad",
+      "Nómina como fuente de verdad",
+      "Volumen de catálogo",
+      "Datos del mercado laboral",
+      "Cobertura multipaís"
+    ],
+    "libre": [
+      "Resultado de aprendizaje medible",
+      "Diseño instruccional propio",
+      "Contexto y talento LATAM",
+      "Criterio editorial de contenido",
+      "Aprendizaje atado a desempeño",
+      "Distinción visual de categoría",
+      "Voz creativa reconocible"
+    ],
+    "territorioNota": "Cada pieza que hable de catálogo, escala o eficiencia compite en la columna izquierda, donde Buk gasta más y llegó antes. Cada pieza que hable de qué le pasa a una persona después de formarse está en la derecha, donde están solos. <b>El brief de marca debería prohibir la columna izquierda.</b>",
+    "acciones": [
+      {
+        "k": "A1",
+        "t": "Observatorio de datos propios de Crehana",
+        "d": "La respuesta al radar de Buk no es contenido: es un dato que solo Crehana tiene — qué está formando LATAM, qué habilidades crecen, qué abandonan. Mismo modelo: microsite, actualización mensual, descargable citable.",
+        "m": "Marca + Data + Diseño · alto impacto"
+      },
+      {
+        "k": "A2",
+        "t": "Brief de marca que prohíbe la columna izquierda",
+        "d": "Documento corto y operativo: qué territorios no se tocan en ninguna pieza (catálogo, escala, eficiencia administrativa) y cuáles sí. Evita que el equipo produzca creatividad que juega el partido de Buk.",
+        "m": "Marca + Creativo · 1 semana"
+      },
+      {
+        "k": "A3",
+        "t": "Sistema de despiece: un rodaje, un trimestre",
+        "d": "Copiar el modelo de “Lo Nuevo de Buk”. Definir el formato de evento recurrente y su cadena de despiece — shorts, statics, carrusel, nota — con plantillas en Figma para no rediseñar cada vez.",
+        "m": "Diseño + Social · 2–3 días"
+      },
+      {
+        "k": "A4",
+        "t": "Territorio visual contra el SaaS azul",
+        "d": "Dirección de arte que se separe del lenguaje de dashboard e iconografía simétrica. En una categoría donde todos se ven igual, la distinción visual es el canal más barato que tiene Crehana.",
+        "m": "Dirección de arte · 1–2 semanas"
+      },
+      {
+        "k": "A5",
+        "t": "Campaña de prueba de resultado",
+        "d": "Casos con métrica de aprendizaje, no de adopción. El ángulo que Buk no puede responder: asignar un curso no es desarrollar a alguien, y un catálogo licenciado no se diseñó para nadie en particular.",
+        "m": "Paid + Creativo · 1 semana"
+      },
+      {
+        "k": "A6",
+        "t": "Cerrar el hueco “Crehana vs Buk”",
+        "d": "El blog tiene comparativas contra Docebo, UBITS, Kenjo, Runa, Factorial, Udemy Business, Platzi y Coursera, pero no contra Buk. Hoy quien busca esa comparación solo encuentra la versión de ellos.",
+        "m": "Contenido + SEO · 3 días"
+      }
+    ]
+  },
+  "OTROS": [
+    {
+      "id": "rankmi",
+      "nombre": "Rankmi",
+      "sitio": "rankmi.com",
+      "pais": "14 países",
+      "frente": "Marketing y diseño",
+      "tipo": "competidor",
+      "estado": "activo",
+      "corrida": {
+        "n": 2,
+        "id": "2026-W38b",
+        "fecha": "17 sep 2026"
+      },
+      "tesis": {
+        "titulo": "Rankmi ya juega el partido que Crehana tiene pendiente.",
+        "cuerpo": "IA en el titular, nómina y asistencia en la promesa, y siete casos de éxito con cifra. Es el referente más cercano a la home que Crehana quiere construir — y llegó antes.",
+        "resalte": "IA en el titular, nómina y asistencia en la promesa"
+      },
+      "kpis": [
+        {
+          "n": "1.5K",
+          "l": "Empresas clientes",
+          "s": "home"
+        },
+        {
+          "n": "2M",
+          "l": "Usuarios activos",
+          "s": "14 países"
+        },
+        {
+          "n": "−70%",
+          "l": "Tiempo admin en su mejor caso",
+          "s": "Ingevec"
+        },
+        {
+          "n": "7",
+          "l": "Casos con métrica en portada",
+          "s": "todos cuantificados"
+        }
+      ],
+      "aviso": "Lectura de fuentes abiertas del 17 de septiembre. Ads pagados no cubiertos.",
+      "senales": [
+        {
+          "id": "r1",
+          "sev": "crit",
+          "cat": "Mensaje · IA",
+          "t": "“Software de HR con IA para toda Latinoamérica”",
+          "d": "La IA está en el H1, no en una sección interna. La bajada refuerza: “aplica inteligencia artificial en cada proceso”. Suman un “Agente IA 24/7” que responde consultas de sueldo, vacaciones y beneficios, y alertas predictivas de riesgo de rotación.",
+          "w": "Es exactamente el movimiento que la propuesta de home plantea para Crehana. Cada semana que pasa, Rankmi consolida el territorio “HR con IA en LATAM” como suyo.",
+          "vs": {
+            "ellos": "IA en el H1 y agente conversacional con función declarada.",
+            "nos": "El H1 habla del journey del talento; Crehana AI aparece en la quinta sección y los diez agentes no figuran.",
+            "saldo": "ellos",
+            "texto": "Ventaja Rankmi"
+          },
+          "src": [
+            {
+              "t": "rankmi.com",
+              "u": "https://www.rankmi.com/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "r2",
+          "sev": "crit",
+          "cat": "Prueba social · métrica",
+          "t": "Siete casos de éxito, todos con número",
+          "d": "Diversur 2.400 colaboradores unificados en 3 países, Ingevec −70% de tiempo administrativo, CCU +90% de participación en encuestas, BancoEstado +130% de precisión en decisiones, INE −70% en el ciclo contrato-pago.",
+          "w": "Convierte la prueba social en argumento de negocio. Es el estándar contra el que se van a leer los testimonios de Crehana mientras no lleven cifra.",
+          "vs": {
+            "ellos": "Siete casos cuantificados, cada uno con su métrica en portada.",
+            "nos": "Cuatro testimonios sin ninguna cifra: hablan de variedad de cursos y de tener todo en una herramienta.",
+            "saldo": "ellos",
+            "texto": "Ventaja Rankmi"
+          },
+          "src": [
+            {
+              "t": "rankmi.com",
+              "u": "https://www.rankmi.com/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "r3",
+          "sev": "warn",
+          "cat": "Estructura · beneficios por rol",
+          "t": "Ordenan la home por quién eres, no por qué módulo es",
+          "d": "Tras los módulos abren una sección de beneficios segmentada en cuatro: equipo de RRHH, ejecutivos, jefaturas y colaboradores. Cierran con certificaciones ISO 27001, 27701 y 37001.",
+          "w": "Reduce el trabajo del visitante: cada perfil encuentra su argumento sin recorrer el catálogo. Es una estructura barata de copiar y que Crehana no tiene.",
+          "vs": {
+            "ellos": "Beneficios por rol más tres certificaciones declaradas.",
+            "nos": "La home organiza todo por módulo; no hay corte por rol ni bloque de certificaciones.",
+            "saldo": "ellos",
+            "texto": "Ventaja Rankmi"
+          },
+          "src": [
+            {
+              "t": "rankmi.com",
+              "u": "https://www.rankmi.com/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        }
+      ],
+      "ocupado": [
+        "HR con IA en LATAM",
+        "Nómina sin errores",
+        "Casos con métrica",
+        "Cobertura 14 países",
+        "Certificaciones ISO",
+        "Agente IA 24/7"
+      ],
+      "libre": [
+        "Resultado de aprendizaje",
+        "Diseño instruccional propio",
+        "Aprendizaje atado a desempeño",
+        "Voz creativa reconocible"
+      ],
+      "territorioNota": "Rankmi es el competidor más peligroso para la home nueva: ya ocupa el territorio que la propuesta quiere tomar. La diferencia sigue siendo el aprendizaje — su IA responde consultas administrativas, no desarrolla personas.",
+      "acciones": [
+        {
+          "k": "R1",
+          "t": "Acelerar el H1 con IA",
+          "d": "Cada semana de demora consolida a Rankmi en el territorio. El cambio de titular no depende de producto ni de Data: se puede aprobar esta semana.",
+          "m": "Marca · 2 días"
+        },
+        {
+          "k": "R2",
+          "t": "Copiar el corte por rol",
+          "d": "Sección de beneficios segmentada por RRHH, ejecutivos, jefaturas y colaboradores. Reutiliza copy que ya existe en las landings de módulo.",
+          "m": "Contenido + Diseño · 1 semana"
+        }
+      ]
+    },
+    {
+      "id": "humand",
+      "nombre": "Humand",
+      "sitio": "humand.co",
+      "pais": "AR · MX · LATAM",
+      "frente": "Marketing y diseño",
+      "tipo": "competidor",
+      "estado": "activo",
+      "corrida": {
+        "n": 2,
+        "id": "2026-W38b",
+        "fecha": "17 sep 2026"
+      },
+      "tesis": {
+        "titulo": "Humand compite por la experiencia del colaborador, no por el módulo.",
+        "cuerpo": "Su home no vende funcionalidades: vende la app que el trabajador abre todos los días. Nómina y asistencia quedan deliberadamente en el menú secundario.",
+        "resalte": "vende la app que el trabajador abre todos los días"
+      },
+      "kpis": [
+        {
+          "n": "2.000+",
+          "l": "Empresas",
+          "s": "home"
+        },
+        {
+          "n": "4.9/5",
+          "l": "Calificación en el hero",
+          "s": "prueba social inmediata"
+        },
+        {
+          "n": "12+",
+          "l": "Testimonios en carrusel",
+          "s": "con foto y cargo"
+        }
+      ],
+      "aviso": "Lectura de fuentes abiertas del 17 de septiembre. Ads pagados no cubiertos.",
+      "senales": [
+        {
+          "id": "h1",
+          "sev": "warn",
+          "cat": "Mensaje · territorio",
+          "t": "“Tu empresa, más inteligente.” — cuatro palabras y nada de módulos",
+          "d": "El H1 más corto de los cinco. La bajada aterriza: “conecta a tu equipo, mejora la experiencia de los empleados y agiliza procesos internos con la app #1 potenciada con IA”. El foco es la fuerza laboral sin escritorio.",
+          "w": "Prueba que un titular corto y un territorio estrecho ganan contraste. El H1 propuesto para Crehana debería medirse contra este, no contra el de Buk.",
+          "vs": {
+            "ellos": "Titular de cuatro palabras con un territorio claro: experiencia del colaborador.",
+            "nos": "Titular de doce palabras que describe la categoría antes que la promesa.",
+            "saldo": "ellos",
+            "texto": "Ventaja Humand"
+          },
+          "src": [
+            {
+              "t": "humand.co",
+              "u": "https://humand.co/es/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "h2",
+          "sev": "info",
+          "cat": "IA · nombre propio",
+          "t": "Sammy AI: nombre, cara y una sola función",
+          "d": "Su IA se llama Sammy y hace una cosa declarada: “responde dudas internas en segundos, 24/7”. Alrededor, flujos de vacaciones y permisos, y monitoreo en tiempo real.",
+          "w": "Confirma el patrón: bautizar la IA la convierte en producto. Crehana tiene diez nombres listos y ninguno en el sitio.",
+          "vs": {
+            "ellos": "Un agente con nombre y una función clara.",
+            "nos": "Diez agentes con nombre en producto — Genesis, Scout, Atlas, Matriz, Overtime, Clima — invisibles en la web.",
+            "saldo": "nos",
+            "texto": "Ventaja Crehana"
+          },
+          "src": [
+            {
+              "t": "humand.co",
+              "u": "https://humand.co/es/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "h3",
+          "sev": "ok",
+          "cat": "Formato · testimonios",
+          "t": "Doce testimonios con foto, cargo y logo — pero sin cifra",
+          "d": "Carrusel con OXXO, Siemens, Miniso y ArcelorMittal. Marco Cortez, de OXXO: “cambió estructuralmente la forma en que operamos”. Volumen y marcas grandes, cero números.",
+          "w": "El volumen de logos impresiona pero no prueba nada. Con una sola métrica validada, un testimonio de Crehana pesa más que doce de estos.",
+          "vs": {
+            "ellos": "Doce testimonios cualitativos con marcas grandes.",
+            "nos": "Cuatro testimonios, también sin cifra — mismo problema, menos volumen.",
+            "saldo": "par",
+            "texto": "Paridad"
+          },
+          "src": [
+            {
+              "t": "humand.co",
+              "u": "https://humand.co/es/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        }
+      ],
+      "ocupado": [
+        "Experiencia del colaborador",
+        "App para trabajo sin escritorio",
+        "Comunicación interna",
+        "Volumen de testimonios"
+      ],
+      "libre": [
+        "Resultado de aprendizaje",
+        "Nómina y asistencia como promesa",
+        "Desarrollo de personas",
+        "Datos de capacitación"
+      ],
+      "territorioNota": "Humand deja libre justo lo que Crehana acaba de lanzar: esconde nómina y asistencia en el menú. Es la confirmación de que ponerlas en el hero es una decisión de diferenciación, no una obviedad.",
+      "acciones": [
+        {
+          "k": "H1",
+          "t": "Medir el H1 nuevo contra el de Humand",
+          "d": "Antes de cerrar el titular, probar una versión de menos de ocho palabras. El contraste se gana con brevedad, no con cobertura.",
+          "m": "Marca · 1 día"
+        }
+      ]
+    },
+    {
+      "id": "factorial",
+      "nombre": "Factorial",
+      "sitio": "factorial.mx",
+      "pais": "MX · ES · LATAM",
+      "frente": "Marketing y diseño",
+      "tipo": "competidor",
+      "estado": "activo",
+      "corrida": {
+        "n": 2,
+        "id": "2026-W38b",
+        "fecha": "17 sep 2026"
+      },
+      "tesis": {
+        "titulo": "Factorial le dio a su agente un nombre y la cuarta sección de la home.",
+        "cuerpo": "Factorial One no es una función dentro del producto: es un personaje con espacio propio, justo después de la prueba social. Es el modelo exacto para la sección 06 de la propuesta.",
+        "resalte": "un personaje con espacio propio"
+      },
+      "kpis": [
+        {
+          "n": "16.000+",
+          "l": "Empresas con logo en portada",
+          "s": "carrusel"
+        },
+        {
+          "n": "60%",
+          "l": "Horas administrativas ahorradas",
+          "s": "claim de resultado"
+        },
+        {
+          "n": "4.7★",
+          "l": "Calificación de la app",
+          "s": "30K+ reseñas"
+        },
+        {
+          "n": "9/10",
+          "l": "Satisfacción de onboarding",
+          "s": "métrica propia"
+        }
+      ],
+      "aviso": "Lectura de fuentes abiertas del 17 de septiembre. Ads pagados no cubiertos.",
+      "senales": [
+        {
+          "id": "x1",
+          "sev": "crit",
+          "cat": "IA · arquitectura de home",
+          "t": "Factorial One ocupa la cuarta sección, antes que los módulos",
+          "d": "El orden es: hero, carrusel de features, prueba social de 16.000 empresas, y recién ahí el agente. Se presenta como asistente conversacional: le pides un reporte de costos, una encuesta o buscar una política, y lo hace.",
+          "w": "El orden importa tanto como el contenido: la IA va antes del catálogo, no después. La propuesta de Crehana ubica los agentes en la sección 06 — vale la pena discutir subirlos.",
+          "vs": {
+            "ellos": "Agente con nombre, sección propia y ejemplos de uso concretos, en la cuarta posición.",
+            "nos": "Sección de IA genérica en quinta posición, con gráficos y sin decir qué hace.",
+            "saldo": "ellos",
+            "texto": "Ventaja Factorial"
+          },
+          "src": [
+            {
+              "t": "factorial.mx",
+              "u": "https://factorial.mx/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "x2",
+          "sev": "warn",
+          "cat": "Mensaje · categoría",
+          "t": "Se corrieron de RRHH a “recursos humanos y finanzas”",
+          "d": "H1: “el software de recursos humanos y finanzas para la gestión empresarial”. La bajada nombra vacaciones, ausencias, talento, finanzas y nómina. Suman una sección por rol que incluye CFOs.",
+          "w": "Segundo competidor que anexa finanzas, después de Buk. Si Crehana no reclama el aprendizaje con fuerza, la categoría se redefine sin ella.",
+          "vs": {
+            "ellos": "RRHH + finanzas, con nómina nombrada en la bajada.",
+            "nos": "Journey del talento, con nómina recién lanzada y todavía fuera del hero.",
+            "saldo": "ellos",
+            "texto": "Ventaja Factorial"
+          },
+          "src": [
+            {
+              "t": "factorial.mx",
+              "u": "https://factorial.mx/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        },
+        {
+          "id": "x3",
+          "sev": "info",
+          "cat": "Prueba social · formato",
+          "t": "Usan tarjetas de G2 en vez de testimonios propios",
+          "d": "Reseñas con nombre, cargo y tamaño de empresa, tomadas de G2. Citas de una o dos líneas. Junto a ellas, 9/10 en onboarding, 60% de horas ahorradas y 4,7★ con 30.000 reseñas.",
+          "w": "Prueba social de tercero: cuesta menos que producir casos y se lee como más creíble. Alternativa realista mientras CS consigue las métricas validadas.",
+          "vs": {
+            "ellos": "Reseñas de G2, verificables por un tercero.",
+            "nos": "Capterra 4,6/5 en el hero, pero suelto y sin reseñas citadas.",
+            "saldo": "par",
+            "texto": "Paridad"
+          },
+          "src": [
+            {
+              "t": "factorial.mx",
+              "u": "https://factorial.mx/"
+            }
+          ],
+          "ver": "verificado 17 sep 2026"
+        }
+      ],
+      "ocupado": [
+        "RRHH + finanzas",
+        "Agente con nombre propio",
+        "Escala 16.000 empresas",
+        "Reseñas de terceros",
+        "Ecosistema de integraciones"
+      ],
+      "libre": [
+        "Resultado de aprendizaje",
+        "Contenido propio",
+        "Talento LATAM",
+        "Desarrollo atado a desempeño"
+      ],
+      "territorioNota": "Factorial es el mejor modelo de arquitectura de home del grupo: prueba social temprana, agente antes que catálogo y cierre por rol. Conviene copiarle el orden, no el mensaje.",
+      "acciones": [
+        {
+          "k": "X1",
+          "t": "Subir los agentes antes del catálogo",
+          "d": "Evaluar mover la sección 06 al lugar 04 de la propuesta, como hace Factorial. Decisión de arquitectura, cuesta cero producir.",
+          "m": "Marca + Diseño · 1 día"
+        },
+        {
+          "k": "X2",
+          "t": "Usar Capterra como puente",
+          "d": "Mientras CS consigue las métricas validadas, citar reseñas de Capterra con nombre y cargo — el formato de Factorial con G2.",
+          "m": "Contenido · 3 días"
+        }
+      ]
+    },
+    {
+      "id": "personio",
+      "nombre": "Personio",
+      "sitio": "personio.es",
+      "pais": "ES · EU",
+      "frente": "Marketing y diseño",
+      "tipo": "competidor",
+      "estado": "no verificado",
+      "corrida": {
+        "n": 2,
+        "id": "2026-W38b",
+        "fecha": "17 sep 2026"
+      },
+      "tesis": {
+        "titulo": "Personio bloquea el acceso automatizado. Sin lectura esta corrida.",
+        "cuerpo": "personio.es rechaza el rastreo por robots.txt, así que no hay datos verificados que reportar. No se infiere nada de su home: cuando una fuente no se puede leer, se declara y punto.",
+        "resalte": "se declara y punto"
+      },
+      "kpis": [],
+      "aviso": "personio.es bloquea el acceso automatizado. Requiere lectura manual o una fuente alterna antes de la próxima corrida.",
+      "senales": [
+        {
+          "id": "p1",
+          "sev": "info",
+          "cat": "Cobertura · límite",
+          "t": "Fuente no accesible: queda pendiente de lectura manual",
+          "d": "El intento del 17 de septiembre devolvió bloqueo por robots.txt. Las opciones son una captura manual del equipo, o conectar una fuente de terceros que sí lo cubra.",
+          "w": "Es el único referente del grupo sin lectura. Personio es la referencia europea de la categoría y su ausencia deja un punto ciego en el benchmark.",
+          "vs": {
+            "ellos": "No verificado en esta corrida.",
+            "nos": "No aplica.",
+            "saldo": "par",
+            "texto": "Sin datos"
+          },
+          "src": [
+            {
+              "t": "personio.es",
+              "u": "https://www.personio.es/"
+            }
+          ],
+          "ver": "intento fallido 17 sep 2026"
+        }
+      ],
+      "ocupado": [],
+      "libre": [],
+      "territorioNota": "",
+      "acciones": [
+        {
+          "k": "P1",
+          "t": "Resolver el punto ciego",
+          "d": "Una captura manual del home basta para la próxima corrida. Alternativa: conectar una fuente de terceros que cubra el sitio.",
+          "m": "Diseño · 15 minutos"
+        }
+      ]
+    },
+    {
+      "id": "zendesk",
+      "nombre": "Zendesk",
+      "sitio": "zendesk.com",
+      "pais": "Global",
+      "frente": "Referente de UX y mensaje",
+      "tipo": "referente",
+      "estado": "activo",
+      "corrida": {
+        "n": 2,
+        "id": "2026-W38b",
+        "fecha": "17 sep 2026"
+      },
+      "tesis": {
+        "titulo": "Zendesk es la clase de home que queremos, no el competidor que queremos ganar.",
+        "cuerpo": "No compite con Crehana: se vigila por cómo construye la página. Eyebrow de categoría, titular de tres líneas con una en color, agentes de IA como promesa central y una barra de logos con cifra al lado.",
+        "resalte": "por cómo construye la página"
+      },
+      "kpis": [
+        {
+          "n": "22.000+",
+          "l": "Equipos que usan su IA",
+          "s": "junto a la barra de logos"
+        },
+        {
+          "n": "80%",
+          "l": "Automatización que promete",
+          "s": "claim de su sección de IA"
+        },
+        {
+          "n": "3",
+          "l": "Líneas en el titular",
+          "s": "una resaltada en color"
+        }
+      ],
+      "aviso": "Referente, no competidor: se mira su arquitectura de página, no su oferta.",
+      "senales": [
+        {
+          "id": "z1",
+          "sev": "ok",
+          "cat": "Referente · hero",
+          "t": "Eyebrow de categoría, titular de tres líneas, prueba y CTA en una pantalla",
+          "d": "Arriba del titular pone “AI-POWERED CUSTOMER SERVICE PLATFORM” en versalitas: en dos palabras dice de qué va. Luego “Move beyond deflection. Deliver real resolutions.”, con la última línea en verde. Debajo una bajada de una línea, la nota de prueba gratis sin tarjeta, y el campo de email con el CTA al lado.",
+          "w": "Es el patrón exacto que le falta a nuestro hero: categoría, promesa de resultado, prueba y acción sin scrollear. El eyebrow resuelve el “qué es” sin gastar el titular.",
+          "vs": {
+            "ellos": "Eyebrow + titular de resultado + nota de fricción cero + CTA con campo, todo antes del scroll.",
+            "nos": "Titular descriptivo, bajada larga, dos bullets y un solo botón; la categoría se deduce.",
+            "saldo": "ellos",
+            "texto": "Ventaja Zendesk"
+          },
+          "src": [
+            {
+              "t": "zendesk.com",
+              "u": "https://www.zendesk.com/"
+            }
+          ],
+          "ver": "capturado 17 sep 2026"
+        },
+        {
+          "id": "z2",
+          "sev": "ok",
+          "cat": "Referente · prueba social",
+          "t": "La barra de logos lleva su propia cifra al costado",
+          "d": "A la izquierda de los ocho logos — Siemens, GitHub, Uber, Box, Vimeo, Lush, Tesco, Discord — pone “22.000+ service teams trust Zendesk AI” en dos líneas. La cifra y los logos son un solo bloque.",
+          "w": "Resuelve en una banda lo que nosotros tenemos disperso: el +1.200 empresas y el 4,6/5 de Capterra viven separados. Un bloque con cifra pesa más que dos sueltos.",
+          "vs": {
+            "ellos": "Cifra y logos en un mismo bloque, inmediatamente después del hero.",
+            "nos": "Logos y calificación en lugares distintos, sin cifra que los ate.",
+            "saldo": "ellos",
+            "texto": "Ventaja Zendesk"
+          },
+          "src": [
+            {
+              "t": "zendesk.com",
+              "u": "https://www.zendesk.com/"
+            }
+          ],
+          "ver": "capturado 17 sep 2026"
+        },
+        {
+          "id": "z3",
+          "sev": "ok",
+          "cat": "Referente · sección de IA",
+          "t": "Su sección de IA muestra el mecanismo, no el concepto",
+          "d": "“AI that gets smarter with every resolution”, con la promesa de hasta 80% de automatización. Debajo, una secuencia que muestra el mecanismo: una conversación que falla, la señal que deja, y la IA llenando el vacío de conocimiento.",
+          "w": "El modelo para nuestra sección 06: en vez de decir que hay diez agentes, mostrar a uno trabajando. Es lo que convierte una grilla de nombres en una demostración.",
+          "vs": {
+            "ellos": "Muestran el mecanismo paso a paso, con UI real del producto.",
+            "nos": "Sección de IA con gráficos genéricos; los diez agentes no aparecen.",
+            "saldo": "ellos",
+            "texto": "Ventaja Zendesk"
+          },
+          "src": [
+            {
+              "t": "zendesk.com",
+              "u": "https://www.zendesk.com/"
+            }
+          ],
+          "ver": "capturado 17 sep 2026"
+        }
+      ],
+      "ocupado": [
+        "IA como promesa central",
+        "Automatización con cifra",
+        "Escala global",
+        "Mecanismo visible en la página"
+      ],
+      "libre": [
+        "Desarrollo de personas",
+        "Contexto LATAM",
+        "Aprendizaje medible"
+      ],
+      "territorioNota": "No hay territorio que disputarle: Zendesk juega en servicio al cliente. Lo que se le copia es la arquitectura de la página, no el mensaje.",
+      "acciones": [
+        {
+          "k": "Z1",
+          "t": "Adoptar el patrón de eyebrow",
+          "d": "Una línea en versalitas sobre el titular que diga la categoría. Libera al H1 para vender el resultado en vez de explicar qué somos.",
+          "m": "Marca · 1 día"
+        },
+        {
+          "k": "Z2",
+          "t": "Unir cifra y logos en una banda",
+          "d": "Como su “22.000+ service teams”: nuestra cifra de empresas junto a los logos, en un solo bloque.",
+          "m": "Diseño · 1 día"
+        }
+      ]
+    }
+  ],
+  "HOME": {
+    "tarea": "Actualización Home con últimos lanzamientos",
+    "objetivo": "Meter nómina y asistencia, todo el poder de Crehana AI con sus agentes, y testimonios con resultado — sin perder el territorio del journey del talento.",
+    "benchmark": [
+      {
+        "marca": "Rankmi",
+        "h1": "“Software de HR con IA para toda Latinoamérica”",
+        "ia": "IA en el H1 y “Agente IA 24/7” que resuelve consultas de sueldo y vacaciones.",
+        "nomina": "“Nómina sin errores” y control de asistencia, explícitos en el hero.",
+        "social": "Métrica por caso: −70% tiempo admin (Ingevec), +130% precisión (BancoEstado).",
+        "lectura": "El modelo más cercano a lo que Crehana necesita: IA + nómina + casos con número."
+      },
+      {
+        "marca": "Buk CO",
+        "h1": "“Tu Gestión de Recursos Humanos potenciada con IA”",
+        "ia": "Buk AI en tres verbos: crear, analizar, ayudar. Integrada, no aparte.",
+        "nomina": "En la bajada del hero: “transforma tu nómina, selección, desempeño y asistencia”.",
+        "social": "Carrusel con foto, cargo y link a caso de éxito; 50+ logos.",
+        "lectura": "Ya nombra nómina y asistencia en la primera línea. Crehana las esconde en el menú."
+      },
+      {
+        "marca": "Factorial MX",
+        "h1": "“El software de recursos humanos y finanzas para la gestión empresarial”",
+        "ia": "“Factorial One”: el agente tiene nombre propio y sección dedicada, cuarta en la página.",
+        "nomina": "Nómina en la bajada; “checador de asistencia” como módulo propio.",
+        "social": "Tarjetas de G2 con nombre, cargo y tamaño de empresa; 60% de horas ahorradas.",
+        "lectura": "Bautizar al agente es lo que lo hace producto. Crehana tiene diez sin bautizar en el sitio."
+      },
+      {
+        "marca": "Humand",
+        "h1": "“Tu empresa, más inteligente.”",
+        "ia": "“Sammy AI” responde dudas internas 24/7, dentro de la sección de procesos.",
+        "nomina": "Recibos de sueldo y control de asistencia solo en el menú secundario.",
+        "social": "Carrusel de 12+ testimonios con foto, cargo y logo (OXXO, Siemens, Miniso).",
+        "lectura": "Prueba de que esconder nómina es una decisión, no un descuido — y la que no conviene copiar."
+      },
+      {
+        "marca": "Personio",
+        "h1": "No verificado en esta corrida",
+        "ia": "—",
+        "nomina": "—",
+        "social": "—",
+        "lectura": "personio.es bloqueó el acceso automatizado (robots). Queda pendiente para la próxima corrida."
+      }
+    ],
+    "hallazgos": [
+      {
+        "t": "Los cinco referentes ponen la IA en el H1. Crehana no.",
+        "d": "Rankmi, Buk y Humand llevan la IA a la primera línea; Factorial la pone en la segunda sección. El H1 actual de Crehana — “el software de HR que acompaña todo el journey del talento” — no la menciona, y la IA aparece recién en la quinta sección como “toma decisiones con inteligencia”.",
+        "sev": "crit"
+      },
+      {
+        "t": "Todos bautizaron su IA. Crehana tiene diez agentes sin presencia en el sitio.",
+        "d": "Factorial One, Sammy AI, Buk AI. Crehana AI existe como sección, pero Genesis, Scout, Atlas, Matriz, Overtime, Clima, Norte, Coach, Creador y Pulso no aparecen en ningún lado del home. Es el activo más diferenciador y hoy es invisible.",
+        "sev": "crit"
+      },
+      {
+        "t": "Nómina y asistencia están en el menú, no en la promesa.",
+        "d": "Rankmi, Buk CO y Factorial las nombran en el hero. En Crehana viven en el desplegable de Soluciones y no aparecen entre los cinco tabs de “Activa el potencial”. Para quien llega por búsqueda de nómina, la home no responde.",
+        "sev": "crit"
+      },
+      {
+        "t": "Los testimonios no llevan resultado.",
+        "d": "Davivienda, Banco Supervielle, Fundación Leer y Banco Hipotecario hablan de variedad de cursos y de tener todo en una herramienta. Ningún número. Los referentes muestran −70% de tiempo, +90% de participación, 60% de horas ahorradas.",
+        "sev": "warn"
+      },
+      {
+        "t": "Falta banda de métricas propia.",
+        "d": "Rankmi y Buk la ponen entre la cuarta y la quinta sección. Crehana solo tiene “+1.200 empresas” y el 4,6/5 de Capterra, separados y sin peso visual.",
+        "sev": "warn"
+      }
+    ],
+    "scoreboard": {
+      "titulo": "Cuántos de los 5 referentes ya lo hacen",
+      "nota": "Rankmi, Buk, Factorial y Humand verificados el 17 de septiembre. Personio bloquea el acceso, así que el máximo real de cada barra es 4.",
+      "filas": [
+        {
+          "c": "IA en el titular",
+          "n": 4,
+          "de": 4,
+          "crehana": false,
+          "dato": "Rankmi, Buk y Humand en el H1; Factorial en la segunda sección."
+        },
+        {
+          "c": "IA con nombre propio",
+          "n": 4,
+          "de": 4,
+          "crehana": false,
+          "dato": "Factorial One, Sammy AI, Buk AI, Agente IA 24/7. Crehana tiene 10 sin mostrar."
+        },
+        {
+          "c": "Nómina en el hero",
+          "n": 3,
+          "de": 4,
+          "crehana": false,
+          "dato": "Rankmi, Buk y Factorial. Humand la esconde en el menú."
+        },
+        {
+          "c": "Testimonios con cifra",
+          "n": 2,
+          "de": 4,
+          "crehana": false,
+          "dato": "Rankmi y Factorial. Buk y Humand siguen en lo cualitativo."
+        },
+        {
+          "c": "Banda de métricas propias",
+          "n": 4,
+          "de": 4,
+          "crehana": false,
+          "dato": "Todos la ubican entre la 3.ª y la 5.ª sección."
+        },
+        {
+          "c": "Certificaciones a la vista",
+          "n": 2,
+          "de": 4,
+          "crehana": false,
+          "dato": "Rankmi (ISO 27001/27701/37001) y Buk (Empresa B, ISO, SOC-2)."
+        }
+      ]
+    },
+    "secciones": [
+      {
+        "n": "01",
+        "t": "Hero",
+        "estado": "reescribir",
+        "copy": "Todo el ciclo de talento en una plataforma, con agentes de IA que hacen el trabajo.",
+        "bajada": "La bajada nombra los siete módulos y deja la IA explícita: del reclutamiento a la nómina, con Crehana AI en cada proceso.",
+        "nota": "Conservar el resaltado lima y la itálica serif. CTAs sin cambio.",
+        "porque": "Cierra las tres brechas de un golpe: nombra la IA, mete nómina en la promesa y conserva el journey.",
+        "cuesta": "2 días · solo marca"
+      },
+      {
+        "n": "02",
+        "t": "Prueba social",
+        "estado": "reforzar",
+        "copy": "+1.200 empresas en LATAM confían en Crehana",
+        "bajada": "Unificar el 4,6/5 de Capterra con el carrusel de logos, hoy separados.",
+        "nota": "Es la sección 2 o 3 en los cinco referentes.",
+        "porque": "Prueba social antes de pedir nada.",
+        "cuesta": "1 día · diseño"
+      },
+      {
+        "n": "03",
+        "t": "Banda de resultados",
+        "estado": "nueva",
+        "copy": "Cuatro cifras de impacto",
+        "bajada": "Horas administrativas ahorradas · adopción de rutas · participación en clima · tiempo de contratación.",
+        "nota": "Bloqueante: las cifras las tiene Data. No inventar.",
+        "porque": "Los cuatro referentes verificados la tienen; Crehana no.",
+        "cuesta": "Bloqueado · falta Data"
+      },
+      {
+        "n": "04",
+        "t": "La suite: de 5 a 7 módulos",
+        "estado": "ampliar",
+        "copy": "Activa el potencial de tu organización con Crehana",
+        "bajada": "Personas · Reclutamiento · Capacitación · Desempeño · Clima · Nómina · Asistencia, los dos últimos con badge Nuevo.",
+        "nota": "Mismo formato por tab: captura + 3 bullets + link al módulo.",
+        "porque": "Los lanzamientos entran donde la gente ya mira.",
+        "cuesta": "1 semana · faltan capturas"
+      },
+      {
+        "n": "05",
+        "t": "Nómina y asistencia",
+        "estado": "nueva",
+        "copy": "Ahora también pagas y controlas la jornada desde Crehana",
+        "bajada": "Pay: cálculo, dispersión y timbrado. Time: marcaje, incidencias y turnos. Ambos sobre el mismo expediente.",
+        "nota": "Necesita capturas de producto de Pay y Time.",
+        "porque": "El argumento que nadie puede copiar: nómina y aprendizaje sobre el mismo dato.",
+        "cuesta": "1 semana · faltan capturas"
+      },
+      {
+        "n": "06",
+        "t": "Crehana AI y sus agentes",
+        "estado": "reemplazar",
+        "copy": "No es un asistente. Son diez agentes que ejecutan.",
+        "bajada": "Grilla con los diez, su estado y qué hace cada uno. Reemplaza la sección actual de gráficos genéricos.",
+        "nota": "Factorial la pone 4.ª, antes del catálogo. Evaluar subirla.",
+        "porque": "Es la ventaja más grande del producto y hoy es invisible.",
+        "cuesta": "4 días · listo para arrancar"
+      },
+      {
+        "n": "07",
+        "t": "Testimonios con resultado",
+        "estado": "actualizar",
+        "copy": "Qué cambió después de Crehana",
+        "bajada": "Foto, nombre, cargo, logo, una métrica destacada y la cita. Sumar un caso de Pay o Time.",
+        "nota": "Bloqueante: una cifra validada por cliente. Puente posible: citar Capterra como hace Factorial con G2.",
+        "porque": "Rankmi muestra −70% y +130%. Sin número, no competimos.",
+        "cuesta": "Bloqueado · falta CS"
+      },
+      {
+        "n": "08",
+        "t": "Confianza y ecosistema",
+        "estado": "nueva",
+        "copy": "Seguridad, cumplimiento e integraciones",
+        "bajada": "Certificaciones, cumplimiento fiscal por país y logos de integraciones.",
+        "nota": "Verificar antes qué podemos declarar.",
+        "porque": "Con nómina en la oferta, la objeción de compra pasa a ser cumplimiento.",
+        "cuesta": "Bloqueado · falta Legal"
+      },
+      {
+        "n": "09",
+        "t": "Cierre",
+        "estado": "mantener",
+        "copy": "Agenda un demo",
+        "bajada": "Formulario y acompañamiento, como hoy.",
+        "nota": "Solo ajustar el copy al hero nuevo.",
+        "porque": "Funciona y no es donde está el problema.",
+        "cuesta": "1 hora"
+      }
+    ],
+    "agentes": [
+      {
+        "n": "Genesis",
+        "d": "Gestiona la organización: cargos, colaboradores y estructura.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Scout",
+        "d": "Agente de reportería: rankings, análisis de talento y comparativas de competencias en lenguaje natural.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Atlas",
+        "d": "Diseñador de rutas de aprendizaje por rol, área o competencia.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Matriz",
+        "d": "Crea el modelo de competencias de la empresa conversando.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Overtime",
+        "d": "Configura horas extra con los valores legales de cada país.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Clima",
+        "d": "Configura y activa la encuesta de clima laboral.",
+        "e": "Disponible"
+      },
+      {
+        "n": "Norte",
+        "d": "Setup de objetivos: diseña procesos de metas y asigna personas.",
+        "e": "Próximamente"
+      },
+      {
+        "n": "Coach",
+        "d": "Planes individuales de desarrollo para colaboradores.",
+        "e": "Próximamente"
+      },
+      {
+        "n": "Creador",
+        "d": "Genera cursos interactivos desde PDFs y presentaciones.",
+        "e": "Próximamente"
+      },
+      {
+        "n": "Pulso",
+        "d": "Evaluaciones de clima con insights de bienestar.",
+        "e": "Próximamente"
+      }
+    ],
+    "pendientes": [
+      "Cifras verificadas para la banda de resultados (Data)",
+      "Una métrica por testimonio, validada con el cliente (CS)",
+      "Capturas de producto de Pay y Time (Producto)",
+      "Qué certificaciones de seguridad podemos declarar (Legal/IT)",
+      "Copy final de los 4 agentes marcados “Próximamente”: ¿se muestran o se ocultan hasta el lanzamiento?"
+    ]
+  },
+  "UX": {
+    "resumen": "Hoy la home se lee como nueve bloques blancos en fila: el ojo no sabe dónde termina uno y empieza el otro, así que la gente scrollea sin fijar nada. Esto es lo que dice la investigación y cómo se aplica a las nueve secciones.",
+    "principios": [
+      {
+        "t": "Layer-cake: la gente lee los títulos, no los párrafos",
+        "d": "El eyetracking de NN/g muestra que cuando los encabezados destacan y son descriptivos, el ojo salta de título en título y baja al cuerpo solo donde le interesa. Es el patrón de escaneo más efectivo y es el que hay que provocar.",
+        "a": "Cada sección necesita un H2 que funcione solo: leyendo únicamente los nueve títulos, se debe entender toda la oferta. “Activa el potencial de tu organización” no pasa esa prueba; “Ahora también pagas y controlas la jornada desde Crehana” sí.",
+        "f": "NN/g · Layer-Cake Pattern"
+      },
+      {
+        "t": "Las primeras dos palabras deciden si siguen leyendo",
+        "d": "En una página escaneada, la persona procesa las primeras once caracteres de cada línea. Si el título arranca con relleno, se lo salta.",
+        "a": "Empezar cada título con la palabra que carga el significado. “Diez agentes que ejecutan” antes que “Conoce todo el poder de nuestros agentes”.",
+        "f": "NN/g · First 2 Words"
+      },
+      {
+        "t": "La primera pantalla se lleva el 57% del tiempo de atención",
+        "d": "Más de la mitad del tiempo de visionado ocurre antes del primer scroll. Lo que no está ahí, para la mayoría no existe.",
+        "a": "El hero debe responder tres cosas en cinco segundos: qué problema resolvemos, qué es el producto y para quién es. Hoy el titular responde la segunda y deja las otras dos al scroll.",
+        "f": "Investigación de atención en scroll"
+      },
+      {
+        "t": "Nada de carrusel en el hero",
+        "d": "Los carruseles rotativos bajan la claridad y suben el abandono: la gente no espera a que gire y no controla lo que ve.",
+        "a": "Una sola composición fija con el producto. Si hay que mostrar varios módulos, que sea el usuario quien elija con los tabs de la sección 04.",
+        "f": "Práctica establecida en B2B SaaS"
+      },
+      {
+        "t": "Diferenciar secciones es trabajo de fondo, no de borde",
+        "d": "NN/g recomienda separar los bloques con color de fondo, espaciado y contraste, no solo con una línea. Sin eso, el layer-cake no se arma y la página se lee como un muro.",
+        "a": "Alternar superficies con una regla fija: nunca dos secciones seguidas con el mismo fondo, y los dos picos de la página en morado profundo. Ver el ritmo propuesto abajo.",
+        "f": "NN/g · Layer-Cake Pattern"
+      },
+      {
+        "t": "Tres a cinco testimonios, con cifra y con cargo",
+        "d": "La especificidad gana a la cantidad: “reducimos el onboarding 50%” convierte donde “excelente producto” no hace nada. Nombre, cargo y empresa en cada cita.",
+        "a": "Bajar de la lógica de carrusel largo a cuatro casos fuertes con métrica. Es exactamente lo que ya está bloqueado esperando a CS.",
+        "f": "Benchmark B2B + Rankmi"
+      },
+      {
+        "t": "Un CTA primario, uno secundario, y basta",
+        "d": "Cada objetivo adicional diluye al anterior. Los CTA personalizados por contexto rinden muy por encima de los genéricos.",
+        "a": "Mantener “Agenda un demo” como primario en todo el recorrido y “Habla con Sales” como secundario. Evitar que cada sección invente su propio botón.",
+        "f": "Análisis de 330.000 CTAs · HubSpot"
+      },
+      {
+        "t": "Resultado en el titular, función en el cuerpo",
+        "d": "El error más común en SaaS es titular por características. El titular vende el resultado; la funcionalidad se explica después.",
+        "a": "Revisar los nueve títulos con esta regla antes de mandar a diseño. Es gratis y cambia la percepción de toda la página.",
+        "f": "Errores comunes en homepages B2B"
+      }
+    ],
+    "ritmo": [
+      {
+        "n": "01",
+        "t": "Hero",
+        "fondo": "claro",
+        "why": "Entrada limpia, máximo contraste para el titular"
+      },
+      {
+        "n": "02",
+        "t": "Prueba social",
+        "fondo": "gris",
+        "why": "Baja el tono, actúa de respiro"
+      },
+      {
+        "n": "03",
+        "t": "Resultados",
+        "fondo": "profundo",
+        "why": "Primer pico: las cifras sobre morado se fijan en la memoria"
+      },
+      {
+        "n": "04",
+        "t": "Suite",
+        "fondo": "claro",
+        "why": "Zona de exploración, necesita aire"
+      },
+      {
+        "n": "05",
+        "t": "Nómina y asistencia",
+        "fondo": "lima",
+        "why": "Señal de novedad, el único uso del lima como fondo"
+      },
+      {
+        "n": "06",
+        "t": "Agentes",
+        "fondo": "profundo",
+        "why": "Segundo pico: es la ventaja diferencial"
+      },
+      {
+        "n": "07",
+        "t": "Testimonios",
+        "fondo": "claro",
+        "why": "Las fotos piden fondo neutro"
+      },
+      {
+        "n": "08",
+        "t": "Confianza",
+        "fondo": "gris",
+        "why": "Sección de respaldo, tono bajo"
+      },
+      {
+        "n": "09",
+        "t": "Cierre",
+        "fondo": "profundo",
+        "why": "Cierra donde abrió el primer pico: el formulario destaca"
+      }
+    ],
+    "ritmoNota": "Regla: nunca dos secciones seguidas con el mismo fondo, y como máximo tres bloques profundos en toda la página. Cada cambio de fondo le dice al ojo “acá empieza otra cosa”, que es lo que hoy falta."
+  },
+  "RECURSOS": {
+    "resumen": "Lo que el equipo de diseño tiene que producir para que la home nueva se pare de igual a igual con Rankmi, Buk y Factorial. Todo lo de abajo es trabajo de diseño gráfico: no incluye copy, desarrollo ni las cifras que dependen de Data.",
+    "lotes": [
+      {
+        "sec": "01",
+        "t": "Hero",
+        "ref": "Rankmi y Buk usan collage de UI con personas; Factorial, un carrusel animado.",
+        "piezas": [
+          {
+            "n": "Mockup principal del producto",
+            "q": "1 pieza",
+            "d": "Composición con Crehana AI visible más un módulo nuevo (Pay o Time). Reemplaza el collage actual de Nine Box + clima.",
+            "f": "Figma → PNG 2x + WebP",
+            "e": "1 día",
+            "estado": "por producir"
+          },
+          {
+            "n": "Resaltado lima y itálica del hero",
+            "q": "Ajuste",
+            "d": "Reaplicar el tratamiento existente al copy nuevo. Ya existe el estilo.",
+            "f": "CSS/HTML",
+            "e": "1 hora",
+            "estado": "reutilizable"
+          }
+        ]
+      },
+      {
+        "sec": "02",
+        "t": "Prueba social",
+        "ref": "Rankmi muestra 8+ logos; Buk 50+; Factorial 16.000 empresas con carrusel.",
+        "piezas": [
+          {
+            "n": "Barrido de logos de clientes",
+            "q": "~20 logos",
+            "d": "Normalizar a una sola altura óptica, versión monocroma y color, fondo transparente. Los actuales vienen a 2982px para mostrarse a 245px.",
+            "f": "SVG + WebP 180x100",
+            "e": "1 día",
+            "estado": "por optimizar"
+          },
+          {
+            "n": "Sello de Capterra 4,6/5",
+            "q": "1 pieza",
+            "d": "Unificarlo con la banda de logos en vez de dejarlo suelto en el hero.",
+            "f": "SVG",
+            "e": "2 horas",
+            "estado": "reutilizable"
+          }
+        ]
+      },
+      {
+        "sec": "03",
+        "t": "Banda de resultados",
+        "ref": "Los cuatro referentes verificados tienen su banda de métricas.",
+        "piezas": [
+          {
+            "n": "Sistema de tiles de cifra",
+            "q": "4 tiles",
+            "d": "Número grande, etiqueta y microicono. Tipografía Familjen Grotesk con tabular-nums para que los dígitos no bailen.",
+            "f": "Componente Figma",
+            "e": "1 día",
+            "estado": "bloqueado por Data"
+          },
+          {
+            "n": "Iconografía de métrica",
+            "q": "4 iconos",
+            "d": "Reloj, ruta, pulso y embudo. Trazo 1.5px, mismo grid que el resto.",
+            "f": "SVG 24px",
+            "e": "medio día",
+            "estado": "por producir"
+          }
+        ]
+      },
+      {
+        "sec": "04",
+        "t": "Suite de 7 módulos",
+        "ref": "Buk usa iconografía simétrica por pilar; Crehana ya tiene 5 tabs con captura.",
+        "piezas": [
+          {
+            "n": "Capturas de producto de Pay y Time",
+            "q": "2 capturas",
+            "d": "Mismo encuadre, densidad y datos ficticios coherentes que las cinco actuales. Sin esto la sección no se puede diseñar.",
+            "f": "PNG 2x desde producto",
+            "e": "1 día",
+            "estado": "bloqueado por Producto"
+          },
+          {
+            "n": "Iconos de los 7 módulos",
+            "q": "7 iconos",
+            "d": "Hoy hay cinco y no comparten grid. Rehacer la familia completa para que Pay y Time no se vean pegados.",
+            "f": "SVG 32px",
+            "e": "1,5 días",
+            "estado": "por producir"
+          },
+          {
+            "n": "Badge “Nuevo”",
+            "q": "1 componente",
+            "d": "Lima sobre morado, dos tamaños. Se reutiliza en menú, tabs y sección 05.",
+            "f": "Componente Figma",
+            "e": "1 hora",
+            "estado": "por producir"
+          }
+        ]
+      },
+      {
+        "sec": "05",
+        "t": "Nómina y asistencia",
+        "ref": "Rankmi ilustra nómina con UI real; Factorial con su checador.",
+        "piezas": [
+          {
+            "n": "Bloque doble Pay + Time",
+            "q": "2 composiciones",
+            "d": "Una por módulo: UI en contexto más un detalle ampliado (recibo, marcaje). Debe verse que comparten el mismo expediente de la persona.",
+            "f": "Figma → PNG 2x",
+            "e": "2 días",
+            "estado": "bloqueado por Producto"
+          },
+          {
+            "n": "Diagrama del dato único",
+            "q": "1 diagrama",
+            "d": "La pieza que ningún competidor puede hacer: nómina, asistencia y aprendizaje sobre la misma persona. Es el argumento diferencial en imagen.",
+            "f": "SVG",
+            "e": "1 día",
+            "estado": "por producir"
+          }
+        ]
+      },
+      {
+        "sec": "06",
+        "t": "Crehana AI y agentes",
+        "ref": "Factorial y Humand ilustran UN agente. Crehana tiene diez y ninguno en la web.",
+        "piezas": [
+          {
+            "n": "Iconos de los 10 agentes",
+            "q": "10 iconos",
+            "d": "Ya existen en producto con su color y símbolo — Genesis, Scout, Atlas, Norte, Matriz, Overtime, Clima, Coach, Creador, Pulso. Exportarlos y unificar el grid para web.",
+            "f": "SVG 40px",
+            "e": "1 día",
+            "estado": "reutilizable de producto"
+          },
+          {
+            "n": "Tarjeta de agente",
+            "q": "1 componente",
+            "d": "Icono, nombre, estado Disponible/Próximamente y descripción. Mismo patrón que ya usa el panel de producto.",
+            "f": "Componente Figma",
+            "e": "medio día",
+            "estado": "por producir"
+          },
+          {
+            "n": "Demo de un agente en acción",
+            "q": "1 pieza",
+            "d": "Loop corto o secuencia de tres pasos: se le pide algo en lenguaje natural y ejecuta. Factorial lo resuelve con capturas; un loop nos deja por encima.",
+            "f": "MP4/WebM o GIF",
+            "e": "2 días",
+            "estado": "por producir"
+          }
+        ]
+      },
+      {
+        "sec": "07",
+        "t": "Testimonios",
+        "ref": "Rankmi y Factorial muestran cifra; Humand foto y logo de 12 clientes.",
+        "piezas": [
+          {
+            "n": "Tarjeta de testimonio con métrica",
+            "q": "1 componente",
+            "d": "Foto, nombre, cargo, logo, cifra destacada y cita. La cifra manda jerárquicamente sobre la cita.",
+            "f": "Componente Figma",
+            "e": "medio día",
+            "estado": "por producir"
+          },
+          {
+            "n": "Retratos de clientes",
+            "q": "4–5 fotos",
+            "d": "Tratamiento uniforme: mismo recorte, temperatura y fondo. Hoy vienen de fuentes distintas.",
+            "f": "WebP 400px",
+            "e": "medio día",
+            "estado": "por conseguir"
+          }
+        ]
+      },
+      {
+        "sec": "08",
+        "t": "Confianza",
+        "ref": "Buk y Rankmi muestran certificaciones con sello; es medio posicionamiento de Buk.",
+        "piezas": [
+          {
+            "n": "Sellos de certificación",
+            "q": "3–5 sellos",
+            "d": "Versión monocroma para que no compitan con la marca. Depende de qué podamos declarar.",
+            "f": "SVG",
+            "e": "medio día",
+            "estado": "bloqueado por Legal"
+          },
+          {
+            "n": "Grilla de integraciones",
+            "q": "~12 logos",
+            "d": "Mismo tratamiento que la banda de clientes.",
+            "f": "SVG",
+            "e": "medio día",
+            "estado": "por producir"
+          }
+        ]
+      }
+    ],
+    "transversal": [
+      {
+        "n": "Tokens y componentes en Figma",
+        "d": "Morado #4822F4, morado oscuro #140058, lima #D6FD6A, Familjen Grotesk + Inter. Dejarlos como variables antes de producir, o cada pieza se diseña distinto.",
+        "e": "1 día",
+        "estado": "primero esto"
+      },
+      {
+        "n": "Dirección de arte contra el SaaS azul",
+        "d": "Lo que la señal f6 detectó en Buk: todos se ven igual. Es la ventaja más barata de explotar y la única que no depende de Producto, Data ni Legal.",
+        "e": "1–2 semanas",
+        "estado": "proyecto aparte"
+      },
+      {
+        "n": "Optimización de peso",
+        "d": "Los logos actuales pesan 1.006 KiB de más por servirse a tamaño completo. Afecta el Core Web Vitals del sitio.",
+        "e": "medio día",
+        "estado": "por hacer"
+      }
+    ]
+  },
+  "WIRE": {
+    "01": {
+      "fondo": "claro",
+      "ref": "Zendesk · hero",
+      "filas": [
+        [
+          [
+            "nav",
+            12
+          ]
+        ],
+        [
+          [
+            "eyebrow",
+            7
+          ],
+          [
+            "ph",
+            5
+          ]
+        ],
+        [
+          [
+            "h1",
+            7
+          ],
+          [
+            "mock",
+            5
+          ]
+        ],
+        [
+          [
+            "sub",
+            7
+          ]
+        ],
+        [
+          [
+            "cta",
+            3
+          ],
+          [
+            "cta2",
+            3
+          ]
+        ],
+        [
+          [
+            "nota",
+            6
+          ]
+        ]
+      ]
+    },
+    "02": {
+      "fondo": "gris",
+      "ref": "Zendesk · barra de logos",
+      "filas": [
+        [
+          [
+            "h2mini",
+            4
+          ],
+          [
+            "logos",
+            8
+          ]
+        ]
+      ]
+    },
+    "03": {
+      "fondo": "profundo",
+      "ref": "Rankmi · banda de métricas",
+      "filas": [
+        [
+          [
+            "h2",
+            12
+          ]
+        ],
+        [
+          [
+            "cifra",
+            3
+          ],
+          [
+            "cifra",
+            3
+          ],
+          [
+            "cifra",
+            3
+          ],
+          [
+            "cifra",
+            3
+          ]
+        ]
+      ]
+    },
+    "04": {
+      "fondo": "claro",
+      "ref": "Crehana · tabs actuales",
+      "filas": [
+        [
+          [
+            "h2",
+            12
+          ]
+        ],
+        [
+          [
+            "tabs",
+            12
+          ]
+        ],
+        [
+          [
+            "mock",
+            7
+          ],
+          [
+            "bullets",
+            5
+          ]
+        ]
+      ]
+    },
+    "05": {
+      "fondo": "lima",
+      "ref": "Rankmi · nómina",
+      "filas": [
+        [
+          [
+            "h2",
+            12
+          ]
+        ],
+        [
+          [
+            "mockmini",
+            6
+          ],
+          [
+            "mockmini",
+            6
+          ]
+        ],
+        [
+          [
+            "flujo",
+            12
+          ]
+        ]
+      ]
+    },
+    "06": {
+      "fondo": "profundo",
+      "ref": "Zendesk · AI que aprende",
+      "filas": [
+        [
+          [
+            "h2",
+            12
+          ]
+        ],
+        [
+          [
+            "sub",
+            12
+          ]
+        ],
+        [
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ]
+        ],
+        [
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ],
+          [
+            "agente",
+            2.4
+          ]
+        ]
+      ]
+    },
+    "07": {
+      "fondo": "claro",
+      "ref": "Rankmi · casos con cifra",
+      "filas": [
+        [
+          [
+            "h2",
+            12
+          ]
+        ],
+        [
+          [
+            "caso",
+            3
+          ],
+          [
+            "caso",
+            3
+          ],
+          [
+            "caso",
+            3
+          ],
+          [
+            "caso",
+            3
+          ]
+        ]
+      ]
+    },
+    "08": {
+      "fondo": "gris",
+      "ref": "Buk · certificaciones",
+      "filas": [
+        [
+          [
+            "h2mini",
+            5
+          ],
+          [
+            "sellos",
+            7
+          ]
+        ]
+      ]
+    },
+    "09": {
+      "fondo": "profundo",
+      "ref": "Factorial · cierre con form",
+      "filas": [
+        [
+          [
+            "h2",
+            7
+          ],
+          [
+            "form",
+            5
+          ]
+        ],
+        [
+          [
+            "cta",
+            3
+          ]
+        ]
+      ]
+    }
+  },
+  "COPY_DEF": {
+    "01": {
+      "eyebrow": "PLATAFORMA DE TALENTO CON AGENTES DE IA",
+      "h1": "Todo el ciclo de talento, con agentes que hacen el trabajo.",
+      "sub": "Del reclutamiento a la nómina: personas, asistencia, capacitación, desempeño y clima, con Crehana AI en cada proceso.",
+      "cta": "Agenda un demo",
+      "cta2": "Habla con Sales",
+      "nota": "Sin costo. Implementación acompañada."
+    },
+    "02": {
+      "h2mini": "+1.200 empresas en LATAM ya trabajan con Crehana · 4,6/5 en Capterra"
+    },
+    "03": {
+      "h2": "Lo que cambia cuando el talento se gestiona en un solo lugar",
+      "c1": "—% menos tiempo administrativo",
+      "c2": "—% de adopción de rutas",
+      "c3": "—% de participación en clima",
+      "c4": "— días para contratar"
+    },
+    "04": {
+      "h2": "Siete módulos, un solo expediente de la persona",
+      "sub": "Personas · Reclutamiento · Capacitación · Desempeño · Clima · Nómina · Asistencia"
+    },
+    "05": {
+      "h2": "Ahora también pagas y controlas la jornada desde Crehana",
+      "izq": "Nómina: cálculo, dispersión de pagos y timbrado fiscal.",
+      "der": "Asistencia: marcaje digital, incidencias y turnos.",
+      "flujo": "Asistencia → Nómina → Desarrollo, sobre la misma persona"
+    },
+    "06": {
+      "h2": "No es un asistente. Son diez agentes que ejecutan.",
+      "sub": "Le hablas en lenguaje natural y el agente configura, analiza o crea. Seis disponibles hoy."
+    },
+    "07": {
+      "h2": "Qué cambió después de Crehana",
+      "sub": "Cuatro casos, cada uno con su cifra."
+    },
+    "08": {
+      "h2mini": "Seguridad, cumplimiento fiscal por país e integraciones"
+    },
+    "09": {
+      "h2": "Agenda un demo y te mostramos tu caso",
+      "cta": "Agenda un demo"
+    }
+  },
+  "REVISA": [
+    "Home y landings: titulares, copy, CTAs",
+    "Contenido nuevo: estudios, microsites, eventos",
+    "Roadmap público y notas de lanzamiento",
+    "Blog, newsroom y prensa",
+    "Pruebas sociales y territorios de mensaje",
+    "Comparación contra la corrida anterior"
+  ],
+  "NO_REVISA": [
+    "Ads pagados en Meta — la biblioteca bloquea el acceso",
+    "Instagram y TikTok orgánico",
+    "Color, tipografía y retícula al detalle",
+    "Alcance, engagement o gasto real de sus piezas",
+    "Qué hacer con cada hallazgo — eso lo decide el equipo"
+  ]
+}
