@@ -78,6 +78,22 @@ async function subir(sb: ReturnType<typeof adminDb>, archivo: string, id: string
   return data.publicUrl;
 }
 
+/**
+ * El material oficial de Crehana vive en el bucket privado `contexto`, no en git: el repo es público.
+ * En local, si el bucket no responde, se usa la copia de contexto/crehana.md (gitignoreada).
+ */
+async function contextoCrehana(sb: ReturnType<typeof adminDb>) {
+  const { data, error } = await sb.storage.from("contexto").download("crehana.md");
+  if (data) return await data.text();
+  const local = path.join(process.cwd(), "contexto", "crehana.md");
+  if (fs.existsSync(local)) {
+    console.log(`⚠ contexto: bucket no disponible (${error?.message}), uso la copia local`);
+    return fs.readFileSync(local, "utf8");
+  }
+  console.log(`⚠ contexto: no hay material oficial de Crehana (${error?.message}). Corré \`npm run contexto\`.`);
+  return "(No disponible en esta corrida. No inventes cifras ni nombres de producto: marcá como no verificado.)";
+}
+
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   const sb = adminDb();
@@ -141,8 +157,10 @@ async function main() {
   /* La semana sola no alcanza: dos corridas manuales en la misma semana se pisaban. */
   const idCorrida = `${semana}-c${n}`;
 
+  const crehana = await contextoCrehana(sb);
+
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  const prompt = fs.readFileSync(path.join(process.cwd(), "scripts", "prompt.md"), "utf8")
+  const prompt =fs.readFileSync(path.join(process.cwd(), "scripts", "prompt.md"), "utf8")
     .replace("{{CORRIDA}}", String(n))
     .replace("{{SEMANA}}", semana)
     .replace("{{FECHA}}", HOY)
@@ -153,7 +171,8 @@ async function main() {
     .replace("{{APROBACIONES}}", JSON.stringify(aprob ?? [], null, 1))
     .replace("{{HILOS}}", JSON.stringify(hilos ?? [], null, 1))
     .replace("{{CAPTURAS}}", JSON.stringify(capturadas, null, 1))
-    .replace("{{CAIDAS}}", caidas.join("; ") || "ninguna");
+    .replace("{{CAIDAS}}", caidas.join("; ") || "ninguna")
+    .replace("{{CREHANA}}", () => crehana);
 
   // Las capturas del hero de cada sitio entran como imágenes para que Claude las mire de verdad.
   const imagenes = Object.entries(capturadas)

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed.ts",
-    "corrida": "tsx --env-file-if-exists=.env.local scripts/sherlock.ts"
+    "corrida": "tsx --env-file-if-exists=.env.local scripts/sherlock.ts",
+    "contexto": "tsx --env-file-if-exists=.env.local scripts/subir-contexto.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",

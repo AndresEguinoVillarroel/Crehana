@@ -5,3 +5,4 @@ node_modules
 shots/
 *.log
 tsconfig.tsbuildinfo
+contexto/
