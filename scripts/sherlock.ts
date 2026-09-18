@@ -208,10 +208,12 @@ async function main() {
     .replace("{{CREHANA}}", () => crehana);
 
   // Las capturas del hero de cada sitio entran como imágenes para que Claude las mire de verdad.
+  /* Crehana va primero: el cara a cara se hace contra su hero, así que nunca puede quedar afuera. */
   const imagenes = Object.entries(capturadas)
+    .sort(([a], [b]) => (a === "crehana" ? -1 : b === "crehana" ? 1 : 0))
     .map(([, lista]) => lista[0])
     .filter(Boolean)
-    .slice(0, 8)
+    .slice(0, 16)
     .map((c) => ({
       type: "image" as const,
       source: {

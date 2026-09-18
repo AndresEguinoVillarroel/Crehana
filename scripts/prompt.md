@@ -77,7 +77,9 @@ Fuentes caídas esta semana: {{CAIDAS}}
 
 ## Cómo trabajás
 
-Las primeras imágenes de este mensaje son los heroes capturados hoy. Miralos de verdad y juzgalos con tu marco.
+Las primeras imágenes de este mensaje son los heroes capturados hoy: la primera es crehana.com y las demás siguen el orden de "Capturas tomadas hoy". Miralos de verdad y juzgalos con tu marco.
+
+Los competidores con frente "Nómina y asistencia · México" vienen de las matrices internas (ver Mapa de competencia). Se miran sobre todo para la sección 05 y para el territorio de Pay y Time. Su lectura inicial viene de la matriz de 2025: cuando la home de hoy la contradiga, manda lo que ves hoy.
 
 1. **Tendencia:** si un tema aparece en 3 o más de las últimas 6 corridas, eso es un hallazgo por sí solo.
 2. **Calibración:** si el equipo ignoró o rechazó la mayoría de un tema, subí su umbral; si adoptó o aprobó, bajalo.
