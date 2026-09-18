@@ -78,20 +78,39 @@ async function subir(sb: ReturnType<typeof adminDb>, archivo: string, id: string
   return data.publicUrl;
 }
 
+/** Orden de lectura: primero qué es Crehana, después la prueba social y al final la competencia. */
+const MATERIAL = ["crehana.md", "testimonios.md", "competencia.md"];
+
 /**
- * El material oficial de Crehana vive en el bucket privado `contexto`, no en git: el repo es público.
- * En local, si el bucket no responde, se usa la copia de contexto/crehana.md (gitignoreada).
+ * El material interno de Crehana vive en el bucket privado `contexto`, no en git: el repo es público.
+ * En local, si el bucket no responde, se usa la copia de contexto/ (gitignoreada).
  */
 async function contextoCrehana(sb: ReturnType<typeof adminDb>) {
-  const { data, error } = await sb.storage.from("contexto").download("crehana.md");
-  if (data) return await data.text();
-  const local = path.join(process.cwd(), "contexto", "crehana.md");
-  if (fs.existsSync(local)) {
-    console.log(`⚠ contexto: bucket no disponible (${error?.message}), uso la copia local`);
-    return fs.readFileSync(local, "utf8");
+  const { data: lista, error } = await sb.storage.from("contexto").list();
+  const remotos = (lista ?? []).map((o) => o.name).filter((n) => n.endsWith(".md"));
+  const orden = (a: string, b: string) =>
+    (MATERIAL.indexOf(a) + 1 || 99) - (MATERIAL.indexOf(b) + 1 || 99);
+
+  const partes: string[] = [];
+  if (remotos.length) {
+    for (const nombre of remotos.sort(orden)) {
+      const { data } = await sb.storage.from("contexto").download(nombre);
+      if (data) partes.push(await data.text());
+    }
+  } else {
+    const dir = path.join(process.cwd(), "contexto");
+    const locales = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".md")).sort(orden) : [];
+    if (locales.length) console.log(`⚠ contexto: bucket vacío o caído (${error?.message ?? "sin archivos"}), uso la copia local`);
+    for (const nombre of locales) partes.push(fs.readFileSync(path.join(dir, nombre), "utf8"));
   }
-  console.log(`⚠ contexto: no hay material oficial de Crehana (${error?.message}). Corré \`npm run contexto\`.`);
-  return "(No disponible en esta corrida. No inventes cifras ni nombres de producto: marcá como no verificado.)";
+
+  if (!partes.length) {
+    console.log(`⚠ contexto: no hay material interno de Crehana. Corré \`npm run contexto\`.`);
+    return "(No disponible en esta corrida. No inventes cifras, clientes ni nombres de producto: marcá como no verificado.)";
+  }
+  console.log(`contexto: ${partes.length} documentos de material interno`);
+  /* Los documentos arrancan con "# " y el prompt ya está en "##": se bajan un nivel para no romper la jerarquía. */
+  return partes.map((p) => p.replace(/^(#+) /gm, "##$1 ")).join("\n\n---\n\n");
 }
 
 async function main() {
