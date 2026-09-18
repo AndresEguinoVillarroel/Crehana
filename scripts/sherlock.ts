@@ -163,15 +163,28 @@ async function main() {
       },
     }));
 
-  const respuesta = await anthropic.messages.create({
-    model: "claude-opus-4-6",
-    max_tokens: 8000,
-    messages: [{ role: "user", content: [...imagenes, { type: "text", text: prompt }] }],
-  });
+  const respuesta = await anthropic.messages
+    .stream({
+      model: "claude-opus-5",
+      max_tokens: 32000,
+      messages: [{ role: "user", content: [...imagenes, { type: "text", text: prompt }] }],
+    })
+    .finalMessage();
 
   const texto = respuesta.content.map((b: any) => (b.type === "text" ? b.text : "")).join("");
-  const json = texto.slice(texto.indexOf("{"), texto.lastIndexOf("}") + 1);
-  const salida = JSON.parse(json);
+  fs.writeFileSync(path.join(OUT, "respuesta-cruda.txt"), texto, "utf8");
+  if (respuesta.stop_reason !== "end_turn") {
+    console.log(`⚠ stop_reason: ${respuesta.stop_reason} (la respuesta puede estar incompleta)`);
+  }
+  const sinFences = texto.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  const json = sinFences.slice(sinFences.indexOf("{"), sinFences.lastIndexOf("}") + 1);
+  let salida;
+  try {
+    salida = JSON.parse(json);
+  } catch (e: any) {
+    console.error(`No se pudo parsear el JSON de la respuesta. Guardada en shots/respuesta-cruda.txt para revisar.`);
+    throw e;
+  }
 
   // ---- guardar ----
   await sb.from("corridas").upsert({
