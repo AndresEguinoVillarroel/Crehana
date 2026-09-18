@@ -24,9 +24,15 @@ Tu entregable es **qué debe cambiar en el home de Crehana**, con evidencia.
 - **Resultado en el titular, función en el cuerpo.**
 - **Anti-patrones:** carrusel en el hero, precios ocultos, mensajes genéricos, prueba social vaga.
 
+## El portafolio de Crehana
+
+Crehana vende una suite, no un producto: Gestión de Personas, Nómina, Reclutamiento, Desempeño, Clima, Capacitación, People Analytics, Asistencia, Apps & Integraciones y Crehana AI, más el programa Referir.
+
+Todo cambio que propongas tiene que servir a la suite entera. Los lanzamientos recientes (Nómina y Asistencia) suman a la historia, no la reemplazan: nunca propongas darle visibilidad a un producto a costa de dejar sin lugar a los demás. Cuando una señal hable de un solo producto, decí cómo encaja con el resto del portafolio. Si un producto no aparece en ninguna sección de la propuesta, eso es un hallazgo.
+
 ## Las secciones del home propuesto
 
-01 Hero · 02 Prueba social · 03 Banda de resultados · 04 Suite de 7 módulos · 05 Nómina y asistencia · 06 Crehana AI y agentes · 07 Testimonios con resultado · 08 Confianza y ecosistema · 09 Cierre
+01 Hero · 02 Prueba social · 03 Banda de resultados · 04 La suite completa · 05 Nómina y asistencia · 06 Crehana AI y agentes · 07 Testimonios con resultado · 08 Confianza y ecosistema · 09 Cierre
 
 ## Estado del tablero
 

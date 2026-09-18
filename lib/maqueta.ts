@@ -4,7 +4,9 @@
  * arrastrás donde quieras, el bloque cae en la grilla y los vecinos se corren.
  */
 
-export type Blk = { id: string; t: string; x: number; y: number; w: number; h: number };
+/** a: alineación horizontal del contenido. Sin valor es izquierda, que es como nacen todos. */
+export type Alineacion = "izq" | "centro" | "der";
+export type Blk = { id: string; t: string; x: number; y: number; w: number; h: number; a?: Alineacion };
 
 export const COLS = 12;
 
@@ -63,11 +65,13 @@ export function proximoY(bloques: Blk[]) {
  */
 export function aBloques(wire: any): Blk[] {
   if (!wire) return [];
-  if (Array.isArray(wire.bloques)) {
+  /* Una lista vacía no cuenta: las filas viejas traen bloques [] por defecto y los datos siguen en filas. */
+  if (Array.isArray(wire.bloques) && wire.bloques.length) {
     return wire.bloques.map((b: any) => ({
       id: b.id, t: b.t,
       x: Number(b.x) || 0, y: Number(b.y) || 0,
       w: Math.max(1, Number(b.w) || 1), h: Math.max(1, Number(b.h) || alto(b.t)),
+      ...(b.a === "centro" || b.a === "der" ? { a: b.a } : {}),
     }));
   }
 

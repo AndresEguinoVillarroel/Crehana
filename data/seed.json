@@ -813,6 +813,7 @@
   "HOME": {
     "nombre": "Home",
     "url": "https://www.crehana.com/",
+    "titular": "La home no dice que Crehana tiene IA, ni que paga la nómina.",
     "tarea": "Actualización Home con últimos lanzamientos",
     "objetivo": "Meter nómina y asistencia, todo el poder de Crehana AI con sus agentes, y testimonios con resultado — sin perder el territorio del journey del talento.",
     "benchmark": [
@@ -1423,333 +1424,423 @@
     "01": {
       "fondo": "claro",
       "ref": "Zendesk · hero",
-      "filas": [
-        [
-          {
-            "id": "nav",
-            "t": "nav",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "eyebrow",
-            "t": "eyebrow",
-            "w": 7
-          },
-          {
-            "id": "ph",
-            "t": "ph",
-            "w": 5
-          }
-        ],
-        [
-          {
-            "id": "h1",
-            "t": "h1",
-            "w": 7
-          },
-          {
-            "id": "mock",
-            "t": "mock",
-            "w": 5
-          }
-        ],
-        [
-          {
-            "id": "sub",
-            "t": "sub",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "cta",
-            "t": "cta",
-            "w": 6
-          },
-          {
-            "id": "cta2",
-            "t": "cta2",
-            "w": 6
-          }
-        ],
-        [
-          {
-            "id": "nota",
-            "t": "nota",
-            "w": 12
-          }
-        ]
+      "bloques": [
+        {
+          "id": "nav",
+          "t": "nav",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "eyebrow",
+          "t": "eyebrow",
+          "x": 0,
+          "y": 2,
+          "w": 7,
+          "h": 1
+        },
+        {
+          "id": "ph",
+          "t": "ph",
+          "x": 7,
+          "y": 2,
+          "w": 5,
+          "h": 1
+        },
+        {
+          "id": "h1",
+          "t": "h1",
+          "x": 0,
+          "y": 3,
+          "w": 7,
+          "h": 3
+        },
+        {
+          "id": "mock",
+          "t": "mock",
+          "x": 7,
+          "y": 3,
+          "w": 5,
+          "h": 4
+        },
+        {
+          "id": "sub",
+          "t": "sub",
+          "x": 0,
+          "y": 7,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "cta",
+          "t": "cta",
+          "x": 0,
+          "y": 9,
+          "w": 6,
+          "h": 2
+        },
+        {
+          "id": "cta2",
+          "t": "cta2",
+          "x": 6,
+          "y": 9,
+          "w": 6,
+          "h": 2
+        },
+        {
+          "id": "nota",
+          "t": "nota",
+          "x": 0,
+          "y": 11,
+          "w": 12,
+          "h": 1
+        }
       ]
     },
     "02": {
       "fondo": "gris",
       "ref": "Zendesk · barra de logos",
-      "filas": [
-        [
-          {
-            "id": "h2mini",
-            "t": "h2mini",
-            "w": 4
-          },
-          {
-            "id": "logos",
-            "t": "logos",
-            "w": 8
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2mini",
+          "t": "h2mini",
+          "x": 0,
+          "y": 0,
+          "w": 4,
+          "h": 1
+        },
+        {
+          "id": "logos",
+          "t": "logos",
+          "x": 4,
+          "y": 0,
+          "w": 8,
+          "h": 2
+        }
       ]
     },
     "03": {
       "fondo": "profundo",
       "ref": "Rankmi · banda de métricas",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "cifra",
-            "t": "cifra",
-            "w": 3
-          },
-          {
-            "id": "cifra-2",
-            "t": "cifra",
-            "w": 3
-          },
-          {
-            "id": "cifra-3",
-            "t": "cifra",
-            "w": 3
-          },
-          {
-            "id": "cifra-4",
-            "t": "cifra",
-            "w": 3
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "cifra",
+          "t": "cifra",
+          "x": 0,
+          "y": 2,
+          "w": 3,
+          "h": 3
+        },
+        {
+          "id": "cifra-2",
+          "t": "cifra",
+          "x": 3,
+          "y": 2,
+          "w": 3,
+          "h": 3
+        },
+        {
+          "id": "cifra-3",
+          "t": "cifra",
+          "x": 6,
+          "y": 2,
+          "w": 3,
+          "h": 3
+        },
+        {
+          "id": "cifra-4",
+          "t": "cifra",
+          "x": 9,
+          "y": 2,
+          "w": 3,
+          "h": 3
+        }
       ]
     },
     "04": {
       "fondo": "claro",
       "ref": "Crehana · tabs actuales",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "tabs",
-            "t": "tabs",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "mock",
-            "t": "mock",
-            "w": 7
-          },
-          {
-            "id": "bullets",
-            "t": "bullets",
-            "w": 5
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "tabs",
+          "t": "tabs",
+          "x": 0,
+          "y": 2,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "mock",
+          "t": "mock",
+          "x": 0,
+          "y": 4,
+          "w": 7,
+          "h": 4
+        },
+        {
+          "id": "bullets",
+          "t": "bullets",
+          "x": 7,
+          "y": 4,
+          "w": 5,
+          "h": 2
+        }
       ]
     },
     "05": {
       "fondo": "lima",
       "ref": "Rankmi · nómina",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "mockmini",
-            "t": "mockmini",
-            "w": 6
-          },
-          {
-            "id": "mockmini-2",
-            "t": "mockmini",
-            "w": 6
-          }
-        ],
-        [
-          {
-            "id": "flujo",
-            "t": "flujo",
-            "w": 12
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "mockmini",
+          "t": "mockmini",
+          "x": 0,
+          "y": 2,
+          "w": 6,
+          "h": 3
+        },
+        {
+          "id": "mockmini-2",
+          "t": "mockmini",
+          "x": 6,
+          "y": 2,
+          "w": 6,
+          "h": 3
+        },
+        {
+          "id": "flujo",
+          "t": "flujo",
+          "x": 0,
+          "y": 5,
+          "w": 12,
+          "h": 1
+        }
       ]
     },
     "06": {
       "fondo": "profundo",
       "ref": "Zendesk · AI que aprende",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "sub",
-            "t": "sub",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "agente",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-2",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-3",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-4",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-5",
-            "t": "agente",
-            "w": 2.4
-          }
-        ],
-        [
-          {
-            "id": "agente-6",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-7",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-8",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-9",
-            "t": "agente",
-            "w": 2.4
-          },
-          {
-            "id": "agente-10",
-            "t": "agente",
-            "w": 2.4
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "sub",
+          "t": "sub",
+          "x": 0,
+          "y": 2,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "agente",
+          "t": "agente",
+          "x": 0,
+          "y": 4,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-2",
+          "t": "agente",
+          "x": 2,
+          "y": 4,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-3",
+          "t": "agente",
+          "x": 4,
+          "y": 4,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-4",
+          "t": "agente",
+          "x": 6,
+          "y": 4,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-5",
+          "t": "agente",
+          "x": 8,
+          "y": 4,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-6",
+          "t": "agente",
+          "x": 0,
+          "y": 6,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-7",
+          "t": "agente",
+          "x": 2,
+          "y": 6,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-8",
+          "t": "agente",
+          "x": 4,
+          "y": 6,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-9",
+          "t": "agente",
+          "x": 6,
+          "y": 6,
+          "w": 2,
+          "h": 2
+        },
+        {
+          "id": "agente-10",
+          "t": "agente",
+          "x": 8,
+          "y": 6,
+          "w": 2,
+          "h": 2
+        }
       ]
     },
     "07": {
       "fondo": "claro",
       "ref": "Rankmi · casos con cifra",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 12
-          }
-        ],
-        [
-          {
-            "id": "caso",
-            "t": "caso",
-            "w": 3
-          },
-          {
-            "id": "caso-2",
-            "t": "caso",
-            "w": 3
-          },
-          {
-            "id": "caso-3",
-            "t": "caso",
-            "w": 3
-          },
-          {
-            "id": "caso-4",
-            "t": "caso",
-            "w": 3
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 2
+        },
+        {
+          "id": "caso",
+          "t": "caso",
+          "x": 0,
+          "y": 2,
+          "w": 3,
+          "h": 4
+        },
+        {
+          "id": "caso-2",
+          "t": "caso",
+          "x": 3,
+          "y": 2,
+          "w": 3,
+          "h": 4
+        },
+        {
+          "id": "caso-3",
+          "t": "caso",
+          "x": 6,
+          "y": 2,
+          "w": 3,
+          "h": 4
+        },
+        {
+          "id": "caso-4",
+          "t": "caso",
+          "x": 9,
+          "y": 2,
+          "w": 3,
+          "h": 4
+        }
       ]
     },
     "08": {
       "fondo": "gris",
       "ref": "Buk · certificaciones",
-      "filas": [
-        [
-          {
-            "id": "h2mini",
-            "t": "h2mini",
-            "w": 5
-          },
-          {
-            "id": "sellos",
-            "t": "sellos",
-            "w": 7
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2mini",
+          "t": "h2mini",
+          "x": 0,
+          "y": 0,
+          "w": 5,
+          "h": 1
+        },
+        {
+          "id": "sellos",
+          "t": "sellos",
+          "x": 5,
+          "y": 0,
+          "w": 7,
+          "h": 2
+        }
       ]
     },
     "09": {
       "fondo": "profundo",
       "ref": "Factorial · cierre con form",
-      "filas": [
-        [
-          {
-            "id": "h2",
-            "t": "h2",
-            "w": 7
-          },
-          {
-            "id": "form",
-            "t": "form",
-            "w": 5
-          }
-        ],
-        [
-          {
-            "id": "cta",
-            "t": "cta",
-            "w": 12
-          }
-        ]
+      "bloques": [
+        {
+          "id": "h2",
+          "t": "h2",
+          "x": 0,
+          "y": 0,
+          "w": 7,
+          "h": 2
+        },
+        {
+          "id": "form",
+          "t": "form",
+          "x": 7,
+          "y": 0,
+          "w": 5,
+          "h": 4
+        },
+        {
+          "id": "cta",
+          "t": "cta",
+          "x": 0,
+          "y": 4,
+          "w": 12,
+          "h": 2
+        }
       ]
     }
   },

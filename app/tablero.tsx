@@ -2,20 +2,31 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { db } from "@/lib/db";
-import { aBloques, acomodar, alto, proximoY, topar, COLS, type Blk } from "@/lib/maqueta";
+import { aBloques, acomodar, alto, proximoY, topar, COLS, type Alineacion, type Blk } from "@/lib/maqueta";
+import { Guardado, Ic, Paleta, Sidebar, usePreferencia, type Destino, type EstadoGuardado } from "./navegacion";
+import { Research } from "./research";
+import { Presentacion } from "./presentacion";
 
 const REVISORES = ["Xime", "Yess"];
-const PERSONAS = ["Andrés", "Xime", "Yess", "Yeni"];
-const SEV: Record<string, string> = { crit: "Crítica", warn: "Alta", info: "Media", ok: "Oportunidad" };
-const VISTAS = [
-  ["resumen", "Resumen"],
-  ["senales", "Señales"],
-  ["home", "Mejoras website"],
-  ["backlog", "Backlog"],
-  ["historial", "Historial"],
-] as const;
+/** El portafolio completo, en el orden del menú de crehana.com. Los nuevos suman, no reemplazan. */
+const PRODUCTOS = ["Personas", "Nómina", "Reclutamiento", "Desempeño", "Clima", "Capacitación", "People Analytics", "Asistencia", "Integraciones", "Crehana AI"];
+const NUEVOS = ["Nómina", "Asistencia"];
 
-type Vista = (typeof VISTAS)[number][0];
+/** Quién puede firmar, y qué hace cada una en el flujo. */
+const PERSONAS = ["Andrés", "Xime", "Yess", "Yeni"];
+const ROLES: Record<string, string> = {
+  Andrés: "Coordina la propuesta y el backlog",
+  Xime: "Revisa y aprueba secciones y cambios",
+  Yess: "Revisa y aprueba secciones y cambios",
+  Yeni: "Produce los recursos de diseño",
+};
+const SEV: Record<string, string> = { crit: "Crítica", warn: "Alta", info: "Media", ok: "Oportunidad" };
+
+type Vista = "home" | "backlog" | "resumen" | "senales" | "historial";
+
+/** Traduce los errores de base que tienen causa conocida a algo accionable. */
+const explicar = (m: string) =>
+  /schema cache|does not exist/i.test(m) ? "falta correr supabase/schema.sql en Supabase" : m;
 
 export default function Tablero(props: any) {
   const { competidores, senales, paginas, corridas } = props;
@@ -28,8 +39,27 @@ export default function Tablero(props: any) {
   const [hilos, setHilos] = useState<any[]>(props.hilosIniciales);
   const [copys, setCopys] = useState<any[]>(props.copysIniciales);
   const [layouts, setLayouts] = useState<any[]>(props.layoutsIniciales);
-  const [yo, setYo] = useState("Andrés");
+  /* La identidad vive en el navegador de cada persona. Si nunca eligió, se le pregunta antes de nada. */
+  const [yo, setYoEstado] = useState<string>("");
+  const [preguntarQuien, setPreguntarQuien] = useState(false);
+  useEffect(() => {
+    let guardado: string | null = null;
+    try { guardado = localStorage.getItem("sherlock:yo"); } catch {}
+    if (guardado && PERSONAS.includes(guardado)) setYoEstado(guardado);
+    else setPreguntarQuien(true);
+  }, []);
+  const setYo = (p: string) => {
+    setYoEstado(p);
+    setPreguntarQuien(false);
+    try { localStorage.setItem("sherlock:yo", p); } catch {}
+  };
   const [aviso, setAviso] = useState("");
+  /* Los errores quedan fijos en el indicador de guardado; el aviso puede irse solo. */
+  useEffect(() => {
+    if (!aviso) return;
+    const t = setTimeout(() => setAviso(""), 6000);
+    return () => clearTimeout(t);
+  }, [aviso]);
 
   /* Tiempo real: lo que decide una persona lo ven todas. */
   useEffect(() => {
@@ -61,20 +91,36 @@ export default function Tablero(props: any) {
   const layoutDe = (sec: string) => layouts.find((l: any) => enEstaPagina(l) && l.seccion === sec);
   const aprobado = (clave: string) =>
     REVISORES.filter((r) => aprob.find((a: any) => a.id === `${pagina}/${clave}__${r}` && a.valor === "si"));
+  /** "si", "no" o null: lo que decidió cada revisora, para poder mostrar también los rechazos. */
+  const valorAprob = (clave: string, r: string) =>
+    aprob.find((a: any) => a.id === `${pagina}/${clave}__${r}`)?.valor ?? null;
   /** Clave de hilo de comentarios de una sección, dentro de su página. */
   const claveSec = (sec: string) => `${pagina}/sec-${sec}`;
+
+  /* Toda escritura pasa por acá: el indicador de la barra dice si quedó guardada o por qué no. */
+  const [guardado, setGuardado] = useState<EstadoGuardado>({ estado: "listo" });
+  async function persistir(que: string, accion: () => PromiseLike<{ error: any }>) {
+    setGuardado({ estado: "guardando" });
+    const { error } = await accion();
+    if (error) {
+      const motivo = explicar(error.message);
+      setGuardado({ estado: "error", detalle: motivo });
+      setAviso(`No se guardó ${que}: ${motivo}`);
+    } else {
+      setGuardado({ estado: "listo" });
+    }
+  }
 
   async function guardarAprob(clave: string, revisora: string, valor: string | null) {
     const alcance = `${pagina}/${clave}`;
     const id = `${alcance}__${revisora}`;
     if (valor === null) {
       setAprob((v) => v.filter((a) => a.id !== id));
-      await db.from("aprobaciones").delete().eq("id", id);
+      await persistir("la aprobación", () => db.from("aprobaciones").delete().eq("id", id));
     } else {
       const fila = { id, clave: alcance, revisora, valor, actualizado: new Date().toISOString() };
       setAprob((v) => [...v.filter((a) => a.id !== id), fila]);
-      const { error } = await db.from("aprobaciones").upsert(fila);
-      if (error) setAviso("No se pudo guardar: " + error.message);
+      await persistir("la aprobación", () => db.from("aprobaciones").upsert(fila));
     }
   }
 
@@ -85,8 +131,7 @@ export default function Tablero(props: any) {
       autor: yo, texto: texto.trim(), creado: new Date().toISOString(),
     };
     setHilos((v) => [...v, fila]);
-    const { error } = await db.from("hilos").insert(fila);
-    if (error) setAviso("No se pudo comentar: " + error.message);
+    await persistir("el comentario", () => db.from("hilos").insert(fila));
   }
 
   const otraSeccion = (fila: any, sec: string) => !(enEstaPagina(fila) && fila.seccion === sec);
@@ -95,21 +140,20 @@ export default function Tablero(props: any) {
     const previo = copys.find((c: any) => enEstaPagina(c) && c.seccion === sec)?.valores ?? {};
     const valores = { ...previo, [k]: valor };
     setCopys((v) => [...v.filter((c) => otraSeccion(c, sec)), { pagina, seccion: sec, valores }]);
-    const { error } = await db.from("copys").upsert({ pagina, seccion: sec, valores, actualizado: new Date().toISOString() });
-    if (error) setAviso("No se pudo guardar el copy: " + error.message);
+    await persistir("el texto", () =>
+      db.from("copys").upsert({ pagina, seccion: sec, valores, actualizado: new Date().toISOString() }));
   }
 
   async function guardarLayout(sec: string, fondo: string, bloques: any[]) {
     setLayouts((v) => [...v.filter((l) => otraSeccion(l, sec)), { pagina, seccion: sec, fondo, bloques }]);
-    const { error } = await db.from("layouts").upsert({ pagina, seccion: sec, fondo, bloques, actualizado: new Date().toISOString() });
-    if (error) setAviso("No se pudo guardar la maqueta: " + error.message);
+    await persistir("la maqueta", () =>
+      db.from("layouts").upsert({ pagina, seccion: sec, fondo, bloques, actualizado: new Date().toISOString() }));
   }
 
   /** Borra el override y devuelve la sección al wireframe que propuso el agente. */
   async function borrarLayout(sec: string) {
     setLayouts((v) => v.filter((l) => otraSeccion(l, sec)));
-    const { error } = await db.from("layouts").delete().eq("pagina", pagina).eq("seccion", sec);
-    if (error) setAviso("No se pudo restaurar: " + error.message);
+    await persistir("la restauración", () => db.from("layouts").delete().eq("pagina", pagina).eq("seccion", sec));
   }
 
   async function correrAhora() {
@@ -124,76 +168,114 @@ export default function Tablero(props: any) {
     setAviso(r.ok ? j.mensaje : "No se pudo lanzar: " + j.error);
   }
 
-  const abiertos = backlog.filter((b) => enEstaPagina(b) && b.estado !== "publicado").length;
+  /* ---- navegación ---- */
+  const [menu, setMenu] = useState(false);
+  const [mini, setMini] = usePreferencia("mini", false);
+  const [paleta, setPaleta] = useState(false);
+  const [seccionActiva, setSeccionActiva] = useState<string | null>(null);
+  const [salto, setSalto] = useState<{ sec: string; n: number } | null>(null);
+  const [presentando, setPresentando] = useState(false);
+
+  function ir(d: Destino) {
+    const cambiaDeLugar = d.vista !== vista || (!!d.pagina && d.pagina !== pagina) || (!!d.comp && d.comp !== actual);
+    if (d.pagina) setPagina(d.pagina);
+    if (d.comp) setActual(d.comp);
+    setVista(d.vista as Vista);
+    setMenu(false);
+    if (d.sec) setSalto((s) => ({ sec: d.sec!, n: (s?.n ?? 0) + 1 }));
+    else if (cambiaDeLugar) window.scrollTo({ top: 0 });
+  }
+
+  useEffect(() => {
+    if (!salto || vista !== "home") return;
+    document.getElementById(`sc-${salto.sec}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [salto, vista, pagina]);
+
+  /* La sección que se está leyendo queda marcada en el índice del sidebar. */
+  useEffect(() => {
+    if (vista !== "home") { setSeccionActiva(null); return; }
+    const visibles = new Set<string>();
+    const obs = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        const id = e.target.id.replace("sc-", "");
+        if (e.isIntersecting) visibles.add(id); else visibles.delete(id);
+      }
+      const primera = [...visibles].sort()[0];
+      if (primera && !alFondo()) setSeccionActiva(primera);
+    }, { rootMargin: "-90px 0px -55% 0px" });
+    /* Al final de la página las últimas secciones no llegan arriba: tocando fondo, la activa es la última. */
+    const ultimas = home.HOME?.secciones ?? [];
+    const alFondo = () => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
+    const alScroll = () => { if (alFondo() && ultimas.length) setSeccionActiva(ultimas[ultimas.length - 1].n); };
+    window.addEventListener("scroll", alScroll, { passive: true });
+    document.querySelectorAll(".sc").forEach((el) => obs.observe(el));
+    return () => { obs.disconnect(); window.removeEventListener("scroll", alScroll); };
+  }, [vista, pagina]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const tecla = (e: KeyboardEvent) => {
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key.toLowerCase() === "k") { e.preventDefault(); setPaleta((v) => !v); }
+      if (mod && e.key === "\\") { e.preventDefault(); setMini(!mini); }
+    };
+    window.addEventListener("keydown", tecla);
+    return () => window.removeEventListener("keydown", tecla);
+  }, [mini]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const nombrePagina = paginas.find((p: any) => p.id === pagina)?.data?.HOME?.nombre ?? pagina;
+  const enComp = vista === "senales" || vista === "resumen";
+  const ruta: string[] =
+    vista === "home" ? ["Mejoras website", nombrePagina]
+    : vista === "backlog" ? ["Mejoras website", nombrePagina, "Backlog"]
+    : enComp ? [comp?.tipo === "referente" ? "Referentes" : "Competidores", comp?.nombre ?? ""]
+    : ["Radar", "Historial"];
+  const bajada =
+    vista === "home" ? home.HOME?.tarea
+    : enComp ? `Corrida ${corridas[0]?.n ?? "—"}${comp?.frente ? ` · ${comp.frente}` : ""}`
+    : undefined;
 
   return (
-    <div className="app">
-      <aside className="sb">
-        <div className="brand">
-          <div className="dot" />
-          <div>
-            <b>Sherlock</b>
-            <small>Radar competitivo</small>
-          </div>
-        </div>
-
-        {["competidor", "referente"].map((tipo) => (
-          <div className="sb-group" key={tipo}>
-            <div className="sb-h">{tipo === "competidor" ? "Competidores" : "Referentes"}</div>
-            {competidores.filter((c: any) => c.tipo === tipo).map((c: any) => (
-              <button key={c.id} className="comp" aria-current={c.id === actual}
-                onClick={() => { setActual(c.id); setVista("senales"); }}>
-                <span className={"av" + (tipo === "referente" ? " ref" : "")}>{c.nombre.slice(0, 2).toUpperCase()}</span>
-                <span>{c.nombre}</span>
-                <span className="cnt">{senales.filter((s: any) => s.competidor === c.id).length || "—"}</span>
-              </button>
-            ))}
-          </div>
-        ))}
-
-        <div className="sb-group">
-          <div className="sb-h">Vistas</div>
-          {VISTAS.map(([k, label]) => (
-            <button key={k} className="nav" aria-current={vista === k} onClick={() => setVista(k as Vista)}>
-              {label}
-              {k === "backlog" && abiertos ? <span className="cnt">{abiertos}</span> : null}
-            </button>
-          ))}
-        </div>
-
-        <div className="sb-foot">
-          Comentás como{" "}
-          <select value={yo} onChange={(e) => setYo(e.target.value)} className="quien">
-            {PERSONAS.map((p) => <option key={p}>{p}</option>)}
-          </select>
-          <br />
-          Próxima corrida: lunes 08:00
-        </div>
-      </aside>
+    <div className={"app" + (mini ? " con-mini" : "")}>
+      <Sidebar
+        competidores={competidores} senales={senales} paginas={paginas} corridas={corridas} backlog={backlog}
+        vista={vista} pagina={pagina} actual={actual} seccionActiva={seccionActiva}
+        ir={ir} yo={yo} setYo={setYo} personas={PERSONAS}
+        mini={mini} setMini={setMini} menu={menu} abrirPaleta={() => setPaleta(true)}
+      />
+      {menu && <div className="sb-velo" onClick={() => setMenu(false)} />}
 
       <main className="main">
         <div className="bar">
           <div className="bar-in">
-            <div>
-              <h2>{VISTAS.find(([k]) => k === vista)?.[1]}</h2>
-              <div className="crumb">
-                {vista === "home"
-                  ? `${home.HOME?.tarea ?? ""} · ${aprobado("01").length ? "en revisión" : "prioridad 1"}`
-                  : `${comp?.nombre ?? ""} · corrida ${corridas[0]?.n ?? "—"}`}
-              </div>
+            <button className="burger" aria-label="Abrir navegación" onClick={() => setMenu(true)}>
+              <Ic n="menu" />
+            </button>
+            <div className="bar-t">
+              <nav className="ruta" aria-label="Ubicación">
+                {ruta.slice(0, -1).map((r) => <span key={r}>{r}</span>)}
+              </nav>
+              <h1>{ruta[ruta.length - 1]}</h1>
+              {bajada && <div className="crumb">{bajada}</div>}
             </div>
+            {enComp && (
+              <div className="pgs" role="tablist" aria-label="Vista del competidor">
+                {([["resumen", "Resumen"], ["senales", "Señales"]] as const).map(([k, label]) => (
+                  <button key={k} className="pg" role="tab" aria-selected={vista === k} onClick={() => ir({ vista: k })}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="bar-right">
-              {(vista === "home" || vista === "backlog") && (
-                <div className="pgs" role="tablist" aria-label="Página del sitio">
-                  {paginas.map((p: any) => (
-                    <button key={p.id} className="pg" role="tab" aria-selected={p.id === pagina}
-                      onClick={() => setPagina(p.id)}>
-                      {p.data?.HOME?.nombre ?? p.id}
-                    </button>
-                  ))}
-                </div>
+              {(vista === "home" || vista === "backlog") && <Guardado g={guardado} />}
+              {vista === "home" && (
+                <button className="btn ghost" onClick={() => setPresentando(true)} title="Presentar" aria-label="Presentar">
+                  <Ic n="presentar" /> <span className="lbl">Presentar</span>
+                </button>
               )}
-              <button className="btn ghost" onClick={correrAhora}>▶ Correr ahora</button>
+              <button className="btn ghost" onClick={correrAhora} title="Correr ahora" aria-label="Correr ahora">
+                <Ic n="correr" /> <span className="lbl">Correr ahora</span>
+              </button>
             </div>
           </div>
         </div>
@@ -206,17 +288,32 @@ export default function Tablero(props: any) {
               cap={cap} backlog={backlog} aprob={aprob} aprobado={aprobado}
               guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} yo={yo}
               pagina={pagina} claveSec={claveSec} enEstaPagina={enEstaPagina}
+              valorAprob={valorAprob} ir={ir}
             />
           )}
           {vista === "senales" && <Senales comp={comp} senales={misSenales} cap={cap} />}
           {vista === "resumen" && <Resumen comp={comp} senales={misSenales} corridas={corridas} />}
           {vista === "backlog" && (
             <Backlog backlog={backlog} setBacklog={setBacklog} home={home} enEstaPagina={enEstaPagina}
-              aprobado={aprobado} guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} setAviso={setAviso} />
+              valorAprob={valorAprob} guardarAprob={guardarAprob} persistir={persistir} ir={ir} pagina={pagina} />
           )}
           {vista === "historial" && <Historial corridas={corridas} />}
         </div>
       </main>
+
+      {presentando && vista === "home" && (
+        <Presentacion home={home} nombrePagina={nombrePagina} cerrar={() => setPresentando(false)}
+          maqueta={(sec) => (
+            <Maqueta sec={sec} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
+              layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
+              edit={false} setEdit={() => {}} lectura />
+          )} />
+      )}
+
+      <Paleta abierta={paleta} cerrar={() => setPaleta(false)} ir={ir}
+        paginas={paginas} competidores={competidores} backlog={backlog} />
+
+      {preguntarQuien && <Bienvenida elegir={setYo} />}
 
       {aviso && <div className="toast on" onClick={() => setAviso("")}>{aviso}</div>}
     </div>
@@ -225,102 +322,171 @@ export default function Tablero(props: any) {
 
 /* ---------------- Propuesta de home ---------------- */
 
-function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, cap, backlog, aprobado, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina }: any) {
+function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, cap, backlog, aprobado, valorAprob, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina, ir }: any) {
   const [edit, setEdit] = useState<Record<string, boolean>>({});
-  const [abierto, setAbierto] = useState<Record<string, boolean>>({});
+  const [plegadas, setPlegadas] = usePreferencia<Record<string, boolean>>(`plegadas:${pagina}`, {});
+  const [hiloAbierto, setHiloAbierto] = useState<string | null>(null);
+  const [foto, setFoto] = useState<{ url: string; pie: string; label: string } | null>(null);
   const secciones = home.HOME?.secciones ?? [];
-  const sb = home.HOME?.scoreboard;
+  const lotes = home.RECURSOS?.lotes ?? [];
+
+  useEffect(() => {
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (foto) setFoto(null); else if (hiloAbierto) setHiloAbierto(null);
+    };
+    window.addEventListener("keydown", tecla);
+    return () => window.removeEventListener("keydown", tecla);
+  }, [foto, hiloAbierto]);
+
+  const fondoDe = (sec: string) => {
+    const ov = layoutDe(sec);
+    return (ov && (ov.bloques?.length || ov.filas?.length) ? ov.fondo : home.WIRE?.[sec]?.fondo) ?? "";
+  };
+  const conDobleOk = secciones.filter((s: any) => aprobado(s.n).length === REVISORES.length).length;
+  const todasPlegadas = secciones.length > 0 && secciones.every((s: any) => plegadas[s.n]);
+  const secHilo = secciones.find((s: any) => s.n === hiloAbierto);
 
   return (
     <>
       <div className="hero hero-min">
         <div className="eyebrow">Propuesta · basada en la vigilancia semanal</div>
-        <h1>La home no dice que Crehana tiene IA, ni que paga la nómina.</h1>
+        {home.HOME?.titular && <h2>{home.HOME.titular}</h2>}
         <p>{home.HOME?.objetivo}</p>
       </div>
 
-      {sb && (
-        <section className="sec">
-          <div className="sec-h"><h3>{sb.titulo}</h3><span>ninguna la cumple Crehana hoy</span></div>
-          <div className="board">
-            {sb.filas.map((f: any) => (
-              <div className="brow" key={f.c} title={f.dato}>
-                <div className="blabel">{f.c}</div>
-                <div className="btrack"><div className="bfill" style={{ width: `${(f.n / f.de) * 100}%` }} /></div>
-                <div className="bnum">{f.n}/{f.de}</div>
-                <div className={"bcre " + (f.crehana ? "si" : "no")}>{f.crehana ? "✓" : "✕"}</div>
-              </div>
-            ))}
-          </div>
-          <p className="board-note">{sb.nota}</p>
-        </section>
-      )}
+      <Research home={home} fondoDe={fondoDe} />
 
       <section className="sec">
         <div className="sec-h">
-          <h3>La home propuesta, sección por sección</h3>
-          <span>{secciones.filter((s: any) => aprobado(s.n).length === REVISORES.length).length} de {secciones.length} con doble visto bueno</span>
+          <h3>La propuesta, sección por sección</h3>
+          <span>{conDobleOk} de {secciones.length} con doble visto bueno</span>
+          <button className="sec-tg"
+            onClick={() => setPlegadas(Object.fromEntries(secciones.map((s: any) => [s.n, !todasPlegadas])))}>
+            {todasPlegadas ? "Desplegar todas" : "Plegar todas"}
+          </button>
         </div>
 
         {secciones.map((x: any) => {
           const pend = backlog.filter((b: any) => enEstaPagina(b) && b.seccion === x.n && b.estado !== "publicado").length;
           const nC = hilos.filter((c: any) => c.clave === claveSec(x.n)).length;
+          const pleg = !!plegadas[x.n];
+          const piezas = lotes.find((l: any) => l.sec === x.n)?.piezas ?? [];
           return (
-            <div className="sc" key={x.n} id={`sc-${x.n}`}>
+            <div className={"sc" + (pleg ? " plegada" : "")} key={x.n} id={`sc-${x.n}`}>
               <div className="sc-h">
-                <span className="sc-n">{x.n}</span>
-                <span className="sc-t">{x.t}</span>
-                <span className="sc-e">{x.estado}</span>
-                {pend > 0 && <span className="sc-p">{pend} en backlog</span>}
-                <span className="sc-m">{x.cuesta}</span>
-              </div>
-              <div className="sc-b">
-                <div className="sc-copy">{x.copy}</div>
-                <p className="sc-baj">{x.bajada}</p>
-                <div className="sc-notas">
-                  <div className="sc-nota"><b>Nota de producción.</b> {x.nota}</div>
-                  <div className="sc-why"><b>Por qué.</b> {x.porque}</div>
-                </div>
-
-                <Maqueta
-                  sec={x.n} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
-                  layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
-                  edit={!!edit[x.n]} setEdit={(v: boolean) => setEdit({ ...edit, [x.n]: v })}
-                />
-
-                <div className="shot-trio">
-                  {[["comp", "Competidor"], ["ref", "Referente"], ["cre", "Crehana hoy"]].map(([suf, label]) => {
-                    const c = cap(`${pagina}/sec-${x.n}-${suf}`);
-                    return (
-                      <div className="shot" key={suf}>
-                        <div className="shot-lab">{label}</div>
-                        {c ? (
-                          <figure className="shot-fig">
-                            <img src={c.url} alt={`${label} · sección ${x.n}`} loading="lazy" />
-                            <figcaption>{c.pie}</figcaption>
-                          </figure>
-                        ) : (
-                          <div className="shot-slot">Sin captura todavía</div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="sc-f">
-                  <Aprobacion clave={x.n} aprob={null} aprobado={aprobado} guardar={guardarAprob} />
-                  <button className="sc-cm" onClick={() => setAbierto({ ...abierto, [x.n]: !abierto[x.n] })}>
-                    {abierto[x.n] ? "Ocultar" : "Comentarios"}{nC ? ` (${nC})` : ""}
+                <h4 className="sc-hd">
+                  <button className="sc-tg" aria-expanded={!pleg} aria-controls={`scb-${x.n}`}
+                    onClick={() => setPlegadas({ ...plegadas, [x.n]: !pleg })}>
+                    <Ic n="flecha" className={pleg ? "" : "abierto"} />
+                    <span className="sc-n">{x.n}</span>
+                    <span className="sc-t">{x.t}</span>
+                  </button>
+                </h4>
+                <span className={"sc-e " + claseEstado(x.estado)}>{x.estado}</span>
+                {x.cuesta && <span className="sc-m">{x.cuesta}</span>}
+                <div className="sc-acc">
+                  {pend > 0 && (
+                    <button className="sc-p" onClick={() => ir({ vista: "backlog", pagina })} title="Ver en el backlog">
+                      {pend} en backlog
+                    </button>
+                  )}
+                  <Aprobacion clave={x.n} valor={valorAprob} guardar={guardarAprob} compacta />
+                  <button className="sc-cm" aria-pressed={hiloAbierto === x.n}
+                    aria-label={`Comentarios de ${x.t}${nC ? `, ${nC}` : ""}`}
+                    onClick={() => setHiloAbierto(hiloAbierto === x.n ? null : x.n)}>
+                    <Ic n="comentario" />{nC > 0 && <span>{nC}</span>}
                   </button>
                 </div>
-                {abierto[x.n] && <Hilo clave={claveSec(x.n)} hilos={hilos} comentar={comentar} yo={yo} />}
               </div>
+
+              {!pleg && (
+                <div className="sc-b" id={`scb-${x.n}`}>
+                  <div className="sc-grid">
+                    <div className="sc-main">
+                      <div className="sc-copy">{x.copy}</div>
+                      <p className="sc-baj">{x.bajada}</p>
+                      <Maqueta
+                        sec={x.n} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
+                        layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
+                        edit={!!edit[x.n]} setEdit={(v: boolean) => setEdit({ ...edit, [x.n]: v })}
+                      />
+                      <div className="shot-trio">
+                        {[["comp", "Competidor"], ["ref", "Referente"], ["cre", "Crehana hoy"]].map(([suf, label]) => {
+                          const c = cap(`${pagina}/sec-${x.n}-${suf}`);
+                          return (
+                            <div className="shot" key={suf}>
+                              <div className="shot-lab">{label}</div>
+                              {c ? (
+                                <button className="shot-fig" onClick={() => setFoto({ url: c.url, pie: c.pie, label })}
+                                  aria-label={`Ampliar captura: ${label}, sección ${x.n}`}>
+                                  <img src={c.url} alt="" loading="lazy" />
+                                  <span className="shot-pie">{c.pie}</span>
+                                </button>
+                              ) : (
+                                <div className="shot-slot">Sin captura todavía</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <aside className="sc-rail">
+                      {x.porque && <div className="sc-why"><b>Por qué</b>{x.porque}</div>}
+                      {x.nota && <div className="sc-nota"><b>Nota de producción</b>{x.nota}</div>}
+                      {piezas.length > 0 && (
+                        <div className="sc-piezas">
+                          <b>Piezas de diseño · {piezas.length}</b>
+                          <ul>
+                            {piezas.map((p: any) => (
+                              <li key={p.n} title={p.d}>
+                                <span>{p.n}</span>
+                                <span className="sc-pz-m">{p.f} · {p.e}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </aside>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
       </section>
+
+      {secHilo && (
+        <aside className="lat" aria-label={`Comentarios de ${secHilo.t}`}>
+          <div className="lat-h">
+            <div><small>Comentarios</small><b>{secHilo.n} · {secHilo.t}</b></div>
+            <button className="lat-x" onClick={() => setHiloAbierto(null)} aria-label="Cerrar comentarios"><Ic n="cerrar" /></button>
+          </div>
+          <div className="lat-b">
+            <Hilo clave={claveSec(secHilo.n)} hilos={hilos} comentar={comentar} yo={yo} />
+          </div>
+        </aside>
+      )}
+
+      {foto && (
+        <div className="lb" role="dialog" aria-modal="true" aria-label={foto.label} onClick={() => setFoto(null)}>
+          <figure onClick={(e) => e.stopPropagation()}>
+            <img src={foto.url} alt={foto.label} />
+            <figcaption>{foto.label} · {foto.pie}</figcaption>
+          </figure>
+          <button className="lb-x" aria-label="Cerrar"><Ic n="cerrar" /></button>
+        </div>
+      )}
     </>
   );
+}
+
+/** El estado de la sección describe el tipo de cambio; el color dice cuánto cambia. */
+function claseEstado(estado: string) {
+  if (estado === "nueva") return "new";
+  if (estado === "mantener") return "keep";
+  return "edit";
 }
 
 /* ---------------- La Maqueta: canvas imantado ---------------- */
@@ -353,7 +519,7 @@ const PALETA: [string, string, string, number][] = [
   ["Estructura", "ph", "Espacio", 4],
 ];
 
-function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, edit, setEdit }: any) {
+function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, edit, setEdit, lectura }: any) {
   const base = home.WIRE?.[sec];
   const ov = layoutDe(sec);
   const hayOv = !!ov && !!(ov.bloques?.length || ov.filas?.length);
@@ -474,6 +640,14 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
     conBloques([...bloques, { ...o, id: nid, y: o.y + o.h }], nid);
     setSel(nid);
   }
+  function alinear(id: string, a: Alineacion) {
+    const bs = bloques.map((b) => {
+      if (b.id !== id) return b;
+      const { a: _previa, ...resto } = b;
+      return a === "izq" ? resto : { ...resto, a };
+    });
+    aplicar({ ...specRef.current, bloques: bs }, true);
+  }
   function borrar(id: string) {
     conBloques(bloques.filter((b) => b.id !== id));
     setSel(null);
@@ -511,8 +685,8 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
   const familias = [...new Set(PALETA.map(([f]) => f))];
 
   return (
-    <div className="mq">
-      <div className="mq-bar">
+    <div className={"mq" + (lectura ? " lectura" : "")}>
+      {!lectura && <div className="mq-bar">
         <span className="mq-meta">
           Maqueta · fondo {spec.fondo}{base.ref ? ` · inspirado en ${base.ref}` : ""}
         </span>
@@ -525,10 +699,10 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
           {edit && hayOv && <button className="mq-btn sutil" onClick={restaurar}>Restaurar original</button>}
           <button className={"mq-btn fuerte" + (edit ? " on" : "")}
             onClick={() => { setEdit(!edit); setSel(null); setTexto(null); setPaleta(false); }}>
-            {edit ? "✓ Listo" : "✎ Editar maqueta"}
+            {edit ? <><Ic n="check" /> Listo</> : <><Ic n="lapiz" /> Editar maqueta</>}
           </button>
         </div>
-      </div>
+      </div>}
 
       {edit && paleta && (
         <div className="mq-paleta">
@@ -558,8 +732,16 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
             <>
               <span className="mq-sel">{b.t}</span>
               <span className="mq-dato">x {b.x} · y {b.y} · {b.w}/12 · alto {b.h}</span>
-              <button className="mq-icono" title="Duplicar" onClick={() => duplicar(b.id)}>⧉</button>
-              <button className="mq-icono peligro" title="Borrar" onClick={() => borrar(b.id)}>🗑</button>
+              <div className="mq-alin" role="group" aria-label="Alineación del contenido">
+                {([["izq", "izquierda"], ["centro", "centro"], ["der", "derecha"]] as const).map(([k, l]) => (
+                  <button key={k} className="mq-icono" aria-pressed={(b.a ?? "izq") === k}
+                    aria-label={`Alinear a la ${l}`} title={`Alinear a la ${l}`} onClick={() => alinear(b.id, k)}>
+                    <Ic n={`alin-${k}`} />
+                  </button>
+                ))}
+              </div>
+              <button className="mq-icono" title="Duplicar" onClick={() => duplicar(b.id)} aria-label="Duplicar bloque"><Ic n="duplicar" /></button>
+              <button className="mq-icono peligro" title="Borrar" onClick={() => borrar(b.id)} aria-label="Borrar bloque"><Ic n="basura" /></button>
             </>
           ) : (
             <span className="mq-dato">Arrastrá un bloque para moverlo · estirá de los bordes · doble clic para escribir</span>
@@ -583,11 +765,11 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
             onClick={(e) => { if (edit) { e.stopPropagation(); setSel(blk.id); } }}
             onDoubleClick={() => edit && setTexto(blk.id)}>
             {edit && (
-              <span className="mq-grip" onPointerDown={(e) => gestionar(e, blk.id, "mover")}>⠿ {blk.t}</span>
+              <span className="mq-grip" onPointerDown={(e) => gestionar(e, blk.id, "mover")}><Ic n="agarre" />{blk.t}</span>
             )}
-            <div className="mq-body">
+            <div className="mq-body" data-a={blk.a ?? "izq"}>
               <Pieza tipo={blk.t} id={blk.id} sec={sec} copyDe={copyDe} guardarCopy={guardarCopy}
-                editable={!edit || texto === blk.id} />
+                editable={!lectura && (!edit || texto === blk.id)} />
             </div>
             {edit && (
               <>
@@ -631,7 +813,7 @@ function Pieza({ tipo, id, sec, copyDe, guardarCopy, editable }: any) {
     case "form": return <div className="w-form"><span>formulario</span></div>;
     case "logos": return <div className="w-logos">{Array.from({ length: 7 }).map((_, i) => <span className="w-logo-ph" key={i} />)}</div>;
     case "cifra": return <div className="w-cifra">{texto("w-num", "—", "num")}{texto("w-lab", "métrica", "lab")}</div>;
-    case "tabs": return <div className="w-tabs">{["Personas", "Reclutamiento", "Capacitación", "Desempeño", "Clima"].map((t, i) => <span className={"w-tab" + (i === 0 ? " on" : "")} key={t}>{t}</span>)}{["Nómina", "Asistencia"].map((t) => <span className="w-tab nuevo" key={t}>{t} ·nuevo</span>)}</div>;
+    case "tabs": return <div className="w-tabs">{PRODUCTOS.map((t, i) => <span className={"w-tab" + (i === 0 ? " on" : "") + (NUEVOS.includes(t) ? " nuevo" : "")} key={t}>{t}{NUEVOS.includes(t) ? " ·nuevo" : ""}</span>)}</div>;
     case "bullets": return <div className="w-bul">{[0, 1, 2].map((i) => <span className="w-bul-l" key={i} />)}</div>;
     case "flujo": return texto("w-flujo", "Asistencia → Nómina → Desarrollo");
     case "agente": return <div className="w-ag"><span className="w-ag-ic" />{texto("w-ag-n", "Agente", "n")}</div>;
@@ -643,17 +825,20 @@ function Pieza({ tipo, id, sec, copyDe, guardarCopy, editable }: any) {
 
 /* ---------------- piezas compartidas ---------------- */
 
-function Aprobacion({ clave, aprobado, guardar }: any) {
-  const ok = aprobado(clave);
+/** ✓ y ✕ independientes por revisora; volver a tocar el marcado deshace la decisión. */
+function Aprobacion({ clave, valor, guardar, compacta }: any) {
+  const texto: Record<string, string> = { si: "aprobó", no: "rechazó" };
   return (
-    <div className="apr-wrap">
+    <div className={"apr-wrap" + (compacta ? " compacta" : "")} role="group" aria-label="Aprobación">
       {REVISORES.map((r) => {
-        const si = ok.includes(r);
+        const v = valor(clave, r);
         return (
-          <div className="apr" key={r}>
+          <div className={"apr" + (v ? " " + v : "")} key={r} title={`${r} ${texto[v] ?? "todavía no decidió"}`}>
             <span className="apr-who">{r}</span>
-            <button className="apr-btn si" aria-pressed={si} onClick={() => guardar(clave, r, si ? null : "si")}>✓</button>
-            <button className="apr-btn no" onClick={() => guardar(clave, r, "no")}>✕</button>
+            <button className="apr-btn si" aria-pressed={v === "si"} aria-label={`${r} aprueba`}
+              onClick={() => guardar(clave, r, v === "si" ? null : "si")}><Ic n="check" /></button>
+            <button className="apr-btn no" aria-pressed={v === "no"} aria-label={`${r} rechaza`}
+              onClick={() => guardar(clave, r, v === "no" ? null : "no")}><Ic n="cerrar" /></button>
           </div>
         );
       })}
@@ -661,30 +846,54 @@ function Aprobacion({ clave, aprobado, guardar }: any) {
   );
 }
 
+const fechaHilo = (iso: string) =>
+  new Date(iso).toLocaleDateString("es-PE", { day: "numeric", month: "short" });
+
 function Hilo({ clave, hilos, comentar, yo }: any) {
   const [texto, setTexto] = useState("");
+  const [respondiendo, setRespondiendo] = useState<string | null>(null);
+  const [respuesta, setRespuesta] = useState("");
   const raiz = hilos.filter((c: any) => c.clave === clave && !c.padre);
+
+  const enviar = () => { comentar(clave, texto); setTexto(""); };
+  const responder = (padre: string) => { comentar(clave, respuesta, padre); setRespuesta(""); setRespondiendo(null); };
+
   return (
     <div className="th">
-      <div className="th-h">Comentarios</div>
+      {raiz.length === 0 && (
+        <p className="th-vacio">Todavía no hay comentarios. Lo que escribas acá lo ve todo el equipo, y el agente lo lee como instrucción antes de proponer.</p>
+      )}
       {raiz.map((c: any) => (
         <div className="cm" key={c.id}>
-          <div className="cm-top"><span className="cm-a">{c.autor}</span><span className="cm-t">{new Date(c.creado).toLocaleDateString("es-PE", { day: "numeric", month: "short" })}</span></div>
+          <div className="cm-top"><span className="cm-a">{c.autor}</span><span className="cm-t">{fechaHilo(c.creado)}</span></div>
           <div className="cm-b">{c.texto}</div>
           {hilos.filter((r: any) => r.padre === c.id).map((r: any) => (
             <div className="cm re" key={r.id}>
-              <div className="cm-top"><span className="cm-a">{r.autor}</span></div>
+              <div className="cm-top"><span className="cm-a">{r.autor}</span><span className="cm-t">{fechaHilo(r.creado)}</span></div>
               <div className="cm-b">{r.texto}</div>
             </div>
           ))}
+          {respondiendo === c.id ? (
+            <div className="cmp re">
+              <input className="cmp-in" value={respuesta} autoFocus placeholder={`Responder como ${yo}`}
+                onChange={(e) => setRespuesta(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") responder(c.id);
+                  if (e.key === "Escape") { e.stopPropagation(); setRespondiendo(null); }
+                }} />
+              <button className="btn cmp-go" onClick={() => responder(c.id)}>Responder</button>
+            </div>
+          ) : (
+            <button className="cm-reply" onClick={() => { setRespondiendo(c.id); setRespuesta(""); }}>Responder</button>
+          )}
         </div>
       ))}
       <div className="cmp">
         <span className="cmp-who">{yo}</span>
-        <input className="cmp-in" value={texto} placeholder="Escribe un comentario"
+        <input className="cmp-in" value={texto} placeholder="Escribí un comentario"
           onChange={(e) => setTexto(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { comentar(clave, texto); setTexto(""); } }} />
-        <button className="btn cmp-go" onClick={() => { comentar(clave, texto); setTexto(""); }}>Enviar</button>
+          onKeyDown={(e) => { if (e.key === "Enter") enviar(); }} />
+        <button className="btn cmp-go" onClick={enviar}>Enviar</button>
       </div>
     </div>
   );
@@ -729,7 +938,7 @@ function Resumen({ comp, senales, corridas }: any) {
     <>
       <div className="hero">
         <div className="eyebrow">Corrida {corridas[0]?.n ?? "—"} · {comp?.frente}</div>
-        <h1>{d.tesis?.titulo}</h1>
+        <h2>{d.tesis?.titulo}</h2>
         <p>{d.tesis?.cuerpo}</p>
       </div>
       <div className="kpis">
@@ -753,61 +962,136 @@ function Resumen({ comp, senales, corridas }: any) {
   );
 }
 
-function Backlog({ backlog, setBacklog, home, aprobado, guardarAprob, hilos, comentar, setAviso, enEstaPagina }: any) {
-  const ESTADOS = ["pendiente", "en diseño", "publicado"];
-  const secciones = home.HOME?.secciones ?? [];
-  const porSec: Record<string, any[]> = {};
-  backlog.filter(enEstaPagina).forEach((b: any) => { (porSec[b.seccion] ??= []).push(b); });
+const ESTADOS_BL: [string, string][] = [["pendiente", "Pendiente"], ["en diseño", "En diseño"], ["publicado", "Publicado"]];
+const claseBl = (e: string) => (e === "publicado" ? "pub" : e === "en diseño" ? "dis" : "pen");
 
-  async function cambiar(b: any, estado: string) {
+function Backlog({ backlog, setBacklog, home, valorAprob, guardarAprob, persistir, enEstaPagina, ir, pagina }: any) {
+  const [filtro, setFiltro] = usePreferencia<string>("backlog-filtro", "abiertos");
+  const secciones = home.HOME?.secciones ?? [];
+  const propios = backlog.filter(enEstaPagina);
+  const pasa = (b: any) =>
+    filtro === "todos" ? true : filtro === "abiertos" ? b.estado !== "publicado" : b.estado === filtro;
+  const visibles = propios.filter(pasa);
+  const porSec: Record<string, any[]> = {};
+  visibles.forEach((b: any) => { (porSec[b.seccion] ??= []).push(b); });
+
+  const filtros: [string, string, number][] = [
+    ["abiertos", "Abiertos", propios.filter((b: any) => b.estado !== "publicado").length],
+    ...ESTADOS_BL.map(([k, l]) => [k, l, propios.filter((b: any) => b.estado === k).length] as [string, string, number]),
+    ["todos", "Todos", propios.length],
+  ];
+
+  function cambiar(b: any, estado: string) {
     setBacklog((v: any[]) => v.map((x) => (x.id === b.id ? { ...x, estado } : x)));
-    const { error } = await db.from("backlog").update({ estado, actualizado: new Date().toISOString() }).eq("id", b.id);
-    if (error) setAviso("No se pudo guardar: " + error.message);
+    persistir("el estado", () => db.from("backlog").update({ estado, actualizado: new Date().toISOString() }).eq("id", b.id));
   }
 
   return (
     <>
-      <div className="note">
-        <b>Cómo se llena.</b> Cada corrida del lunes traduce las señales en cambios concretos de la home y los agrega acá, atados a la sección que tocan.
-      </div>
-      {Object.keys(porSec).sort().map((sec) => (
-        <div key={sec}>
-          <div className="bl-h">{sec} · {secciones.find((s: any) => s.n === sec)?.t ?? ""}</div>
-          {porSec[sec].map((b: any) => (
-            <div className="bl" key={b.id}>
-              <div className="bl-top">
-                <span className={"bl-est " + (b.estado === "publicado" ? "pub" : b.estado === "en diseño" ? "dis" : "pen")}>{b.estado}</span>
-                <span className="cat">{b.origen}</span>
-              </div>
-              <h4>{b.titulo}</h4>
-              <p>{b.detalle}</p>
-              <div className="triage">
-                {ESTADOS.map((e) => (
-                  <button key={e} className="t-btn" aria-pressed={b.estado === e} onClick={() => cambiar(b, e)}>{e}</button>
-                ))}
-              </div>
-              <Aprobacion clave={`bk-${b.id}`} aprobado={aprobado} guardar={guardarAprob} />
-            </div>
+      <div className="bk-bar">
+        <div className="bk-filtros" role="tablist" aria-label="Filtrar por estado">
+          {filtros.map(([k, l, n]) => (
+            <button key={k} role="tab" aria-selected={filtro === k} className="bk-f" onClick={() => setFiltro(k)}>
+              {l}<span>{n}</span>
+            </button>
           ))}
         </div>
+        <span className="bk-ayuda">Cada corrida del lunes suma los cambios que salen de las señales, atados a la sección que tocan.</span>
+      </div>
+
+      {visibles.length === 0 && (
+        <div className="empty"><b>Nada en este filtro</b>Probá con “Todos” para ver el backlog completo.</div>
+      )}
+
+      {Object.keys(porSec).sort().map((sec) => (
+        <section className="bk-g" key={sec}>
+          <div className="bk-gh">
+            <h4><span>{sec}</span>{secciones.find((s: any) => s.n === sec)?.t ?? ""}</h4>
+            <span className="bk-gn">{porSec[sec].length}</span>
+            <button className="bk-ver" onClick={() => ir({ vista: "home", pagina, sec })}>Ver la sección</button>
+          </div>
+          <ul className="bk-lista">
+            {porSec[sec].map((b: any) => (
+              <li className="bk-fila" key={b.id}>
+                <label className={"bk-est " + claseBl(b.estado)}>
+                  <span className="sr">Estado</span>
+                  <select value={b.estado} onChange={(e) => cambiar(b, e.target.value)}>
+                    {ESTADOS_BL.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+                  </select>
+                </label>
+                <div className="bk-txt">
+                  <b>{b.titulo}</b>
+                  {b.detalle && <p>{b.detalle}</p>}
+                  {b.origen && <span className="bk-origen">{b.origen}</span>}
+                </div>
+                <Aprobacion clave={`bk-${b.id}`} valor={valorAprob} guardar={guardarAprob} compacta />
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
     </>
   );
 }
 
+const SEV_CORTA: Record<string, string> = { crit: "Crítica", warn: "Alta", info: "Media", ok: "Oportunidad" };
+
 function Historial({ corridas }: any) {
+  const [abierta, setAbierta] = useState<string | null>(corridas[0]?.id ?? null);
   if (!corridas.length) return <div className="empty"><b>Sin corridas archivadas</b>La primera corrida la guarda el agente.</div>;
   return (
-    <div className="hist">
-      {corridas.map((r: any) => (
-        <div className="run" key={r.id}>
-          <div className="run-head">
-            <span className="run-n">C{String(r.n).padStart(2, "0")} · {r.fecha}</span>
-            <span className="run-t">{r.headline}</span>
-            <span className="run-c">{(r.findings ?? []).length} señales</span>
-          </div>
+    <ol className="hist">
+      {corridas.map((r: any, i: number) => {
+        const hallazgos = r.findings ?? [];
+        const abiertaEsta = abierta === r.id;
+        const fecha = new Date(r.fecha + "T12:00:00Z").toLocaleDateString("es", { weekday: "short", day: "numeric", month: "short", timeZone: "America/La_Paz" });
+        return (
+          <li className={"run" + (abiertaEsta ? " abierta" : "")} key={r.id}>
+            <button className="run-head" aria-expanded={abiertaEsta} disabled={!hallazgos.length && !r.visual?.nota}
+              onClick={() => setAbierta(abiertaEsta ? null : r.id)}>
+              <span className="run-n">C{String(r.n).padStart(2, "0")}</span>
+              <span className="run-f">{fecha}{i === 0 && <em>Última</em>}</span>
+              <span className="run-t">{r.headline}</span>
+              <span className="run-c">{hallazgos.length ? `${hallazgos.length} señales` : "sin señales"}</span>
+            </button>
+            {abiertaEsta && (
+              <div className="run-body">
+                {hallazgos.map((h: any) => (
+                  <div className="run-item" key={h.id}>
+                    <span className={"sev " + h.sev}>{SEV_CORTA[h.sev] ?? h.sev}</span>
+                    <span>{h.title}</span>
+                  </div>
+                ))}
+                {r.visual?.nota && <p className="run-nota">{r.visual.nota}</p>}
+                {r.visual?.caidas?.length > 0 && <p className="run-nota">Fuentes caídas: {r.visual.caidas.join(" · ")}</p>}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/** Primera vez en este navegador: sin saber quién es, un comentario o una aprobación quedaría firmado a nombre de otra persona. */
+function Bienvenida({ elegir }: { elegir: (p: string) => void }) {
+  const primera = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => { primera.current?.focus(); }, []);
+  return (
+    <div className="bv-velo">
+      <div className="bv" role="dialog" aria-modal="true" aria-labelledby="bv-t">
+        <div className="dot" />
+        <h2 id="bv-t">Hola, ¿quién sos?</h2>
+        <p>Con tu nombre firmamos los comentarios y las aprobaciones. Queda guardado en este navegador y lo podés cambiar cuando quieras desde abajo a la izquierda.</p>
+        <div className="bv-lista">
+          {PERSONAS.map((p, i) => (
+            <button key={p} ref={i === 0 ? primera : undefined} className="bv-op" onClick={() => elegir(p)}>
+              <span className="av yo-av">{p.slice(0, 1)}</span>
+              <span><b>{p}</b><small>{ROLES[p]}</small></span>
+            </button>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

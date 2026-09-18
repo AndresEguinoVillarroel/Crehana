@@ -30,14 +30,14 @@ async function main() {
 
   const sb = adminDb();
 
-  const { data: home, error } = await sb.from("home").select("data").eq("id", "actual").single();
+  const { data: home, error } = await sb.from("home").select("data").eq("id", "home").single();
   if (error) throw error;
-  await sb.from("home").update({ data: { ...home.data, WIRE: seed.WIRE }, actualizado: new Date().toISOString() }).eq("id", "actual");
+  await sb.from("home").update({ data: { ...home.data, WIRE: seed.WIRE }, actualizado: new Date().toISOString() }).eq("id", "home");
   console.log("home.data.WIRE actualizado");
 
   const { data: layouts } = await sb.from("layouts").select("*");
   for (const fila of layouts ?? []) {
-    if (Array.isArray(fila.bloques)) { console.log(`  layouts ${fila.seccion}: ya migrado`); continue; }
+    if (fila.bloques?.length || !fila.filas?.length) { console.log(`  layouts ${fila.seccion}: ya migrado`); continue; }
     const bloques = aBloques(fila);
     await sb.from("layouts").update({ bloques, filas: null, actualizado: new Date().toISOString() }).eq("seccion", fila.seccion);
     console.log(`  layouts ${fila.seccion}: ${bloques.length} bloques`);
