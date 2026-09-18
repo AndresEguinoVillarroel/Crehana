@@ -44,16 +44,18 @@ async function capturar(page: Page, url: string, slug: string) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(2500);
 
-  /* Lo que lee Google, que en una captura no se ve: sirve para cruzar contra el keyword research. */
-  const seo = await page.evaluate(() => {
-    const txt = (el: Element) => (el.textContent ?? "").replace(/\s+/g, " ").trim();
+  /* Lo que lee Google, que en una captura no se ve: sirve para cruzar contra el keyword research.
+     Va como texto: tsx envuelve las funciones con un helper __name que en el navegador no existe. */
+  const seo = await page.evaluate(String.raw`(() => {
+    const txt = (el) => (el.textContent || "").replace(/\s+/g, " ").trim();
+    const meta = document.querySelector('meta[name="description"]');
     return {
       title: document.title,
-      description: document.querySelector('meta[name="description"]')?.getAttribute("content") ?? "",
-      h1: [...document.querySelectorAll("h1")].map(txt).filter(Boolean),
-      h2: [...document.querySelectorAll("h2")].map(txt).filter(Boolean).slice(0, 15),
+      description: meta ? meta.getAttribute("content") || "" : "",
+      h1: Array.from(document.querySelectorAll("h1")).map(txt).filter(Boolean),
+      h2: Array.from(document.querySelectorAll("h2")).map(txt).filter(Boolean).slice(0, 15),
     };
-  }).catch(() => null);
+  })()`).catch((e: any) => { console.log(`⚠ SEO ${url}: ${e.message?.slice(0, 80)}`); return null; });
 
   let ultimo = 0;
   for (const tramo of TRAMOS) {
