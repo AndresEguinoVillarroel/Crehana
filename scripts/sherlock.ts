@@ -126,6 +126,12 @@ async function contextoCrehana(sb: ReturnType<typeof adminDb>) {
   return partes.map((p) => p.replace(/^(#+) /gm, "##$1 ")).join("\n\n---\n\n");
 }
 
+/** El copy viaja dentro de `detalle`, después de una marca que el tablero sabe separar. */
+const MARCA_COPY = "\n\n§COPY\n";
+function conCopy(detalle?: string, copy?: string) {
+  return copy ? `${detalle ?? ""}${MARCA_COPY}${copy}` : detalle;
+}
+
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   const sb = adminDb();
@@ -268,8 +274,18 @@ async function main() {
   for (const b of (salida.backlog ?? []).slice(0, 4)) {
     await sb.from("backlog").upsert({
       id: b.id ?? `b${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`,
-      seccion: b.seccion, titulo: b.titulo, detalle: b.detalle,
+      seccion: b.seccion, titulo: b.titulo, detalle: conCopy(b.detalle, b.copy),
       origen: b.origen, corrida: String(n), estado: "pendiente",
+    });
+  }
+  /* El bloque de testimonios tiene id fijo: cada corrida lo reescribe en vez de apilar una entrada
+     por semana, y sin tocar `estado` para no pisar lo que el equipo ya movió. */
+  if (salida.testimonios?.copy) {
+    await sb.from("backlog").upsert({
+      id: "testimonios-07", seccion: "07",
+      titulo: "Testimonios con clientes reales: bloque propuesto",
+      detalle: conCopy(salida.testimonios.detalle, salida.testimonios.copy),
+      origen: `Cartas de referencia · corrida ${n}`, corrida: String(n),
     });
   }
 

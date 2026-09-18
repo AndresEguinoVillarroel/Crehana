@@ -1021,7 +1021,16 @@ function Backlog({ backlog, setBacklog, home, valorAprob, guardarAprob, persisti
                 </label>
                 <div className="bk-txt">
                   <b>{b.titulo}</b>
-                  {b.detalle && <p>{b.detalle}</p>}
+                  {(() => {
+                    /* El agente manda el copy propuesto dentro de `detalle`, después de §COPY. */
+                    const [det, copy] = String(b.detalle ?? "").split("\n\n§COPY\n");
+                    return (
+                      <>
+                        {det && <p>{det}</p>}
+                        {copy && <blockquote className="bk-copy"><span>Copy propuesto</span>{copy}</blockquote>}
+                      </>
+                    );
+                  })()}
                   {b.origen && <span className="bk-origen">{b.origen}</span>}
                 </div>
                 <Aprobacion clave={`bk-${b.id}`} valor={valorAprob} guardar={guardarAprob} compacta />

@@ -111,10 +111,24 @@ Respondé **solo con un objeto JSON**, sin texto alrededor:
     }
   ],
   "backlog": [
-    { "seccion": "01", "titulo": "en imperativo", "detalle": "por qué, citando al competidor o el principio de UX", "origen": "Rankmi · home" }
+    { "seccion": "01", "titulo": "en imperativo", "detalle": "por qué, citando al competidor o el principio de UX", "origen": "Rankmi · home", "copy": "opcional: el texto exacto que proponés para la sección" }
   ],
+  "testimonios": {
+    "detalle": "por qué estos clientes y no otros, y qué le falta a cada cita para ser un testimonio con resultado",
+    "copy": "el bloque de la sección 07 listo para maquetar: título de la sección y 3 tarjetas con cita textual, nombre, cargo, empresa, país y módulos"
+  },
   "resumen": "3 a 5 líneas en español latino: qué cambió, la tendencia, la señal más importante, qué entró al backlog y cuántas secciones quedaron con captura fresca"
 }
 ```
 
 Los ids de señal siguen la serie por competidor: si la última de Rankmi fue `r3`, la próxima es `r4`. Máximo 4 entradas de backlog por corrida.
+
+**Copy.** Cuando una entrada de backlog cambie texto de la home, poné en `copy` el texto exacto que proponés, en el lenguaje de Crehana (tuteo, nombres oficiales, "IA" en genérico y "Crehana AI" como nombre). Nada de "algo como…": copy que se pueda pegar en la maqueta.
+
+**Testimonios (en cada corrida, aparte de las 4 entradas).** Proponé el bloque de la sección 07 armado con las cartas de referencia reales del material interno:
+- Elegí las 3 que mejor sirvan a la home de hoy: que cubran módulos distintos de la suite, países distintos y tamaños distintos. Si hay una señal de la semana que pida un tipo de prueba en particular, priorizala.
+- Las citas van **textuales**, cortas (una o dos frases) y tomadas de la carta. No inventes ni mejores las palabras del cliente. Si recortás, marcá el corte con "…".
+- Cada tarjeta lleva nombre, cargo, empresa, país y los módulos que usa.
+- Ninguna carta tiene métrica de resultado. No la inventes: en `detalle`, decí qué cifra habría que pedirle a CS para cada cliente, por ejemplo la adopción en Banco Atlántida.
+- Cerrá el `copy` con "Sujeto a autorización de cada cliente para publicar nombre, cargo y logo."
+- Si el bloque que propusiste la corrida anterior sigue siendo el mejor, repetilo y decilo; no cambies por cambiar.
