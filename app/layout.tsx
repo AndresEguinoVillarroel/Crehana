@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Sherlock · Radar competitivo",
-  description: "Vigilancia de competidores y propuesta de home para Crehana",
+  description: "Vigilancia de competidores y mejoras del website de Crehana",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

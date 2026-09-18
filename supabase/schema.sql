@@ -83,23 +83,57 @@ create table if not exists capturas (
 );
 
 create table if not exists copys (
-  seccion text primary key,
+  pagina text not null default 'home',
+  seccion text not null,
   valores jsonb not null default '{}'::jsonb,
-  actualizado timestamptz default now()
+  actualizado timestamptz default now(),
+  primary key (pagina, seccion)
 );
 
 create table if not exists layouts (
-  seccion text primary key,
+  pagina text not null default 'home',
+  seccion text not null,
   fondo text,
-  filas jsonb not null default '[]'::jsonb,
-  actualizado timestamptz default now()
+  bloques jsonb not null default '[]'::jsonb,   -- [{id, t, x, y, w, h}] sobre la grilla de 12
+  filas jsonb,                                  -- legado: el modelo de filas anterior
+  actualizado timestamptz default now(),
+  primary key (pagina, seccion)
 );
 
+-- Una fila por página del sitio: 'home' hoy, y las que se sumen después.
+-- `data` lleva las secciones, los wireframes y el copy por defecto de esa página.
 create table if not exists home (
-  id text primary key default 'actual',      -- una sola fila: propuesta, ux, recursos, wire, copy_def
+  id text primary key,
   data jsonb not null default '{}'::jsonb,
   actualizado timestamptz default now()
 );
+
+-- Para bases creadas antes del modelo de bloques y de páginas
+alter table layouts add column if not exists bloques jsonb not null default '[]'::jsonb;
+alter table layouts alter column filas drop not null;
+alter table layouts add column if not exists pagina text not null default 'home';
+alter table copys  add column if not exists pagina text not null default 'home';
+alter table backlog add column if not exists pagina text not null default 'home';
+
+do $$
+begin
+  if (select count(*) from pg_index i join pg_class c on c.oid = i.indexrelid
+      where c.relname = 'layouts_pkey') > 0
+     and not exists (select 1 from pg_attribute a join pg_class c on c.oid = a.attrelid
+                     where c.relname = 'layouts_pkey' and a.attname = 'pagina') then
+    alter table layouts drop constraint layouts_pkey;
+    alter table layouts add primary key (pagina, seccion);
+  end if;
+  if (select count(*) from pg_index i join pg_class c on c.oid = i.indexrelid
+      where c.relname = 'copys_pkey') > 0
+     and not exists (select 1 from pg_attribute a join pg_class c on c.oid = a.attrelid
+                     where c.relname = 'copys_pkey' and a.attname = 'pagina') then
+    alter table copys drop constraint copys_pkey;
+    alter table copys add primary key (pagina, seccion);
+  end if;
+end $$;
+
+update home set id = 'home' where id = 'actual';
 
 -- Acceso: el tablero es interno y vive detrás de una URL privada.
 -- RLS abierta al rol anon para lectura y escritura del equipo.
@@ -115,6 +149,23 @@ begin
     execute format('drop policy if exists equipo_escribe on %I', t);
     execute format('create policy equipo_lee on %I for select using (true)', t);
     execute format('create policy equipo_escribe on %I for all using (true) with check (true)', t);
+  end loop;
+end $$;
+
+-- Tiempo real: sin esto el canal se suscribe pero no llega ningún evento,
+-- porque en Supabase una tabla no emite cambios hasta que entra a la publicación.
+do $$
+declare t text;
+begin
+  foreach t in array array['competidores','corridas','senales','triage','backlog',
+                           'aprobaciones','hilos','capturas','copys','layouts','home']
+  loop
+    if not exists (
+      select 1 from pg_publication_tables
+      where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t
+    ) then
+      execute format('alter publication supabase_realtime add table %I', t);
+    end if;
   end loop;
 end $$;
 

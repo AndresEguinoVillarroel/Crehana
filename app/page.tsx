@@ -14,11 +14,11 @@ export default async function Page() {
       db.from("hilos").select("*").order("creado"),
       db.from("copys").select("*"),
       db.from("layouts").select("*"),
-      db.from("home").select("*").eq("id", "actual").maybeSingle(),
+      db.from("home").select("*").order("id"),   // una fila por página del sitio
       db.from("corridas").select("*").order("n", { ascending: false }),
     ]);
 
-  if (!home.data) {
+  if (!home.data?.length) {
     return (
       <main style={{ maxWidth: 620, margin: "80px auto", padding: 24, fontFamily: "Inter, sans-serif" }}>
         <h1 style={{ fontFamily: "Familjen Grotesk, sans-serif" }}>Falta cargar los datos</h1>
@@ -40,7 +40,7 @@ export default async function Page() {
       hilosIniciales={hilos.data ?? []}
       copysIniciales={copys.data ?? []}
       layoutsIniciales={layouts.data ?? []}
-      home={home.data.data}
+      paginas={home.data}
       corridas={corridas.data ?? []}
     />
   );

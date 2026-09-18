@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { db } from "@/lib/db";
+import { aBloques, acomodar, alto, proximoY, topar, COLS, type Blk } from "@/lib/maqueta";
 
 const REVISORES = ["Xime", "Yess"];
 const PERSONAS = ["Andrés", "Xime", "Yess", "Yeni"];
@@ -9,16 +10,17 @@ const SEV: Record<string, string> = { crit: "Crítica", warn: "Alta", info: "Med
 const VISTAS = [
   ["resumen", "Resumen"],
   ["senales", "Señales"],
-  ["home", "Propuesta Home"],
-  ["backlog", "Backlog de home"],
+  ["home", "Mejoras website"],
+  ["backlog", "Backlog"],
   ["historial", "Historial"],
 ] as const;
 
 type Vista = (typeof VISTAS)[number][0];
 
 export default function Tablero(props: any) {
-  const { competidores, senales, home, corridas } = props;
+  const { competidores, senales, paginas, corridas } = props;
   const [vista, setVista] = useState<Vista>("home");
+  const [pagina, setPagina] = useState<string>(paginas[0]?.id ?? "home");
   const [actual, setActual] = useState<string>(competidores[0]?.id ?? "buk");
   const [backlog, setBacklog] = useState<any[]>(props.backlogInicial);
   const [capturas, setCapturas] = useState<any[]>(props.capturasIniciales);
@@ -47,22 +49,29 @@ export default function Tablero(props: any) {
     return () => { db.removeChannel(canal); };
   }, []);
 
+  /* Todo lo de esta vista vive dentro de una página del sitio. */
+  const home = paginas.find((p: any) => p.id === pagina)?.data ?? {};
+  const enEstaPagina = (fila: any) => (fila.pagina ?? "home") === pagina;
+
   const comp = competidores.find((c: any) => c.id === actual) ?? competidores[0];
   const misSenales = senales.filter((s: any) => s.competidor === comp?.id);
   const cap = (id: string) => capturas.find((c: any) => c.id === id);
   const copyDe = (sec: string, k: string) =>
-    copys.find((c: any) => c.seccion === sec)?.valores?.[k] ?? home.COPY_DEF?.[sec]?.[k] ?? "";
-  const layoutDe = (sec: string) => layouts.find((l: any) => l.seccion === sec);
+    copys.find((c: any) => enEstaPagina(c) && c.seccion === sec)?.valores?.[k] ?? home.COPY_DEF?.[sec]?.[k] ?? "";
+  const layoutDe = (sec: string) => layouts.find((l: any) => enEstaPagina(l) && l.seccion === sec);
   const aprobado = (clave: string) =>
-    REVISORES.filter((r) => aprob.find((a: any) => a.id === `${clave}__${r}` && a.valor === "si"));
+    REVISORES.filter((r) => aprob.find((a: any) => a.id === `${pagina}/${clave}__${r}` && a.valor === "si"));
+  /** Clave de hilo de comentarios de una sección, dentro de su página. */
+  const claveSec = (sec: string) => `${pagina}/sec-${sec}`;
 
   async function guardarAprob(clave: string, revisora: string, valor: string | null) {
-    const id = `${clave}__${revisora}`;
+    const alcance = `${pagina}/${clave}`;
+    const id = `${alcance}__${revisora}`;
     if (valor === null) {
       setAprob((v) => v.filter((a) => a.id !== id));
       await db.from("aprobaciones").delete().eq("id", id);
     } else {
-      const fila = { id, clave, revisora, valor, actualizado: new Date().toISOString() };
+      const fila = { id, clave: alcance, revisora, valor, actualizado: new Date().toISOString() };
       setAprob((v) => [...v.filter((a) => a.id !== id), fila]);
       const { error } = await db.from("aprobaciones").upsert(fila);
       if (error) setAviso("No se pudo guardar: " + error.message);
@@ -80,18 +89,27 @@ export default function Tablero(props: any) {
     if (error) setAviso("No se pudo comentar: " + error.message);
   }
 
+  const otraSeccion = (fila: any, sec: string) => !(enEstaPagina(fila) && fila.seccion === sec);
+
   async function guardarCopy(sec: string, k: string, valor: string) {
-    const previo = copys.find((c: any) => c.seccion === sec)?.valores ?? {};
+    const previo = copys.find((c: any) => enEstaPagina(c) && c.seccion === sec)?.valores ?? {};
     const valores = { ...previo, [k]: valor };
-    setCopys((v) => [...v.filter((c) => c.seccion !== sec), { seccion: sec, valores }]);
-    const { error } = await db.from("copys").upsert({ seccion: sec, valores, actualizado: new Date().toISOString() });
+    setCopys((v) => [...v.filter((c) => otraSeccion(c, sec)), { pagina, seccion: sec, valores }]);
+    const { error } = await db.from("copys").upsert({ pagina, seccion: sec, valores, actualizado: new Date().toISOString() });
     if (error) setAviso("No se pudo guardar el copy: " + error.message);
   }
 
-  async function guardarLayout(sec: string, fondo: string, filas: any[]) {
-    setLayouts((v) => [...v.filter((l) => l.seccion !== sec), { seccion: sec, fondo, filas }]);
-    const { error } = await db.from("layouts").upsert({ seccion: sec, fondo, filas, actualizado: new Date().toISOString() });
-    if (error) setAviso("No se pudo guardar el layout: " + error.message);
+  async function guardarLayout(sec: string, fondo: string, bloques: any[]) {
+    setLayouts((v) => [...v.filter((l) => otraSeccion(l, sec)), { pagina, seccion: sec, fondo, bloques }]);
+    const { error } = await db.from("layouts").upsert({ pagina, seccion: sec, fondo, bloques, actualizado: new Date().toISOString() });
+    if (error) setAviso("No se pudo guardar la maqueta: " + error.message);
+  }
+
+  /** Borra el override y devuelve la sección al wireframe que propuso el agente. */
+  async function borrarLayout(sec: string) {
+    setLayouts((v) => v.filter((l) => otraSeccion(l, sec)));
+    const { error } = await db.from("layouts").delete().eq("pagina", pagina).eq("seccion", sec);
+    if (error) setAviso("No se pudo restaurar: " + error.message);
   }
 
   async function correrAhora() {
@@ -106,7 +124,7 @@ export default function Tablero(props: any) {
     setAviso(r.ok ? j.mensaje : "No se pudo lanzar: " + j.error);
   }
 
-  const abiertos = backlog.filter((b) => b.estado !== "publicado").length;
+  const abiertos = backlog.filter((b) => enEstaPagina(b) && b.estado !== "publicado").length;
 
   return (
     <div className="app">
@@ -160,11 +178,21 @@ export default function Tablero(props: any) {
               <h2>{VISTAS.find(([k]) => k === vista)?.[1]}</h2>
               <div className="crumb">
                 {vista === "home"
-                  ? `Actualización Home con últimos lanzamientos · ${aprobado("01").length ? "en revisión" : "prioridad 1"}`
+                  ? `${home.HOME?.tarea ?? ""} · ${aprobado("01").length ? "en revisión" : "prioridad 1"}`
                   : `${comp?.nombre ?? ""} · corrida ${corridas[0]?.n ?? "—"}`}
               </div>
             </div>
             <div className="bar-right">
+              {(vista === "home" || vista === "backlog") && (
+                <div className="pgs" role="tablist" aria-label="Página del sitio">
+                  {paginas.map((p: any) => (
+                    <button key={p.id} className="pg" role="tab" aria-selected={p.id === pagina}
+                      onClick={() => setPagina(p.id)}>
+                      {p.data?.HOME?.nombre ?? p.id}
+                    </button>
+                  ))}
+                </div>
+              )}
               <button className="btn ghost" onClick={correrAhora}>▶ Correr ahora</button>
             </div>
           </div>
@@ -174,15 +202,16 @@ export default function Tablero(props: any) {
           {vista === "home" && (
             <PropuestaHome
               home={home} copyDe={copyDe} guardarCopy={guardarCopy}
-              layoutDe={layoutDe} guardarLayout={guardarLayout}
+              layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
               cap={cap} backlog={backlog} aprob={aprob} aprobado={aprobado}
               guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} yo={yo}
+              pagina={pagina} claveSec={claveSec} enEstaPagina={enEstaPagina}
             />
           )}
           {vista === "senales" && <Senales comp={comp} senales={misSenales} cap={cap} />}
           {vista === "resumen" && <Resumen comp={comp} senales={misSenales} corridas={corridas} />}
           {vista === "backlog" && (
-            <Backlog backlog={backlog} setBacklog={setBacklog} home={home}
+            <Backlog backlog={backlog} setBacklog={setBacklog} home={home} enEstaPagina={enEstaPagina}
               aprobado={aprobado} guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} setAviso={setAviso} />
           )}
           {vista === "historial" && <Historial corridas={corridas} />}
@@ -196,7 +225,7 @@ export default function Tablero(props: any) {
 
 /* ---------------- Propuesta de home ---------------- */
 
-function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, cap, backlog, aprobado, guardarAprob, hilos, comentar, yo }: any) {
+function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, cap, backlog, aprobado, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina }: any) {
   const [edit, setEdit] = useState<Record<string, boolean>>({});
   const [abierto, setAbierto] = useState<Record<string, boolean>>({});
   const secciones = home.HOME?.secciones ?? [];
@@ -234,8 +263,8 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, cap
         </div>
 
         {secciones.map((x: any) => {
-          const pend = backlog.filter((b: any) => b.seccion === x.n && b.estado !== "publicado").length;
-          const nC = hilos.filter((c: any) => c.clave === `sec-${x.n}`).length;
+          const pend = backlog.filter((b: any) => enEstaPagina(b) && b.seccion === x.n && b.estado !== "publicado").length;
+          const nC = hilos.filter((c: any) => c.clave === claveSec(x.n)).length;
           return (
             <div className="sc" key={x.n} id={`sc-${x.n}`}>
               <div className="sc-h">
@@ -253,15 +282,15 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, cap
                   <div className="sc-why"><b>Por qué.</b> {x.porque}</div>
                 </div>
 
-                <Wireframe
+                <Maqueta
                   sec={x.n} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
-                  layoutDe={layoutDe} guardarLayout={guardarLayout}
+                  layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
                   edit={!!edit[x.n]} setEdit={(v: boolean) => setEdit({ ...edit, [x.n]: v })}
                 />
 
                 <div className="shot-trio">
                   {[["comp", "Competidor"], ["ref", "Referente"], ["cre", "Crehana hoy"]].map(([suf, label]) => {
-                    const c = cap(`sec-${x.n}-${suf}`);
+                    const c = cap(`${pagina}/sec-${x.n}-${suf}`);
                     return (
                       <div className="shot" key={suf}>
                         <div className="shot-lab">{label}</div>
@@ -284,7 +313,7 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, cap
                     {abierto[x.n] ? "Ocultar" : "Comentarios"}{nC ? ` (${nC})` : ""}
                   </button>
                 </div>
-                {abierto[x.n] && <Hilo clave={`sec-${x.n}`} hilos={hilos} comentar={comentar} yo={yo} />}
+                {abierto[x.n] && <Hilo clave={claveSec(x.n)} hilos={hilos} comentar={comentar} yo={yo} />}
               </div>
             </div>
           );
@@ -294,127 +323,319 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, cap
   );
 }
 
-/* ---------------- Wireframe editable ---------------- */
+/* ---------------- La Maqueta: canvas imantado ---------------- */
 
 const FONDOS = [["claro", "Claro"], ["gris", "Gris"], ["profundo", "Morado profundo"], ["lima", "Lima"]];
+const FILA_PX = 24;
+const GAP_PX = 10;
 
-function Wireframe({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, edit, setEdit }: any) {
+/** Lo que se puede insertar, agrupado por familia. */
+const PALETA: [string, string, string, number][] = [
+  ["Texto", "h1", "Titular", 8],
+  ["Texto", "h2", "Título", 8],
+  ["Texto", "sub", "Bajada", 7],
+  ["Texto", "eyebrow", "Eyebrow", 5],
+  ["Texto", "nota", "Nota", 6],
+  ["Acción", "cta", "CTA primario", 3],
+  ["Acción", "cta2", "CTA secundario", 3],
+  ["Acción", "form", "Formulario", 5],
+  ["Contenido", "mock", "Captura", 6],
+  ["Contenido", "mockmini", "Captura chica", 4],
+  ["Contenido", "logos", "Logos", 8],
+  ["Contenido", "cifra", "Métrica", 3],
+  ["Contenido", "caso", "Testimonio", 3],
+  ["Contenido", "agente", "Agente", 2],
+  ["Contenido", "tabs", "Tabs", 12],
+  ["Contenido", "bullets", "Bullets", 4],
+  ["Contenido", "sellos", "Sellos", 6],
+  ["Estructura", "nav", "Navegación", 12],
+  ["Estructura", "flujo", "Flujo", 8],
+  ["Estructura", "ph", "Espacio", 4],
+];
+
+function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, edit, setEdit }: any) {
   const base = home.WIRE?.[sec];
   const ov = layoutDe(sec);
-  const [spec, setSpec] = useState<any>(() => ({
-    fondo: ov?.fondo ?? base?.fondo ?? "claro",
-    filas: ov?.filas ?? (base?.filas ?? []).map((f: any) => f.map((b: any) => [b[0], b[1]])),
-  }));
-  const [sel, setSel] = useState<{ fi: number; bi: number } | null>(null);
+  const hayOv = !!ov && !!(ov.bloques?.length || ov.filas?.length);
+
+  const entrante = useMemo(
+    () => JSON.stringify({
+      fondo: (hayOv ? ov.fondo : base?.fondo) ?? "claro",
+      bloques: aBloques(hayOv ? ov : base),
+    }),
+    [ov, base, hayOv]
+  );
+
+  const [spec, setSpec] = useState<any>(() => JSON.parse(entrante));
+  const [sel, setSel] = useState<string | null>(null);
+  const [texto, setTexto] = useState<string | null>(null);
+  const [gesteando, setGesteando] = useState<string | null>(null);
+  const [paleta, setPaleta] = useState(false);
+
+  const specRef = useRef(spec);
+  specRef.current = spec;
+  const propio = useRef(entrante);
+  const gesto = useRef(false);
+  const timer = useRef<any>(null);
+  const lienzo = useRef<HTMLDivElement | null>(null);
+
+  /* Adopta lo que editó otra persona; ignora el eco de lo nuestro. */
+  useEffect(() => {
+    if (gesto.current || entrante === propio.current) return;
+    setSpec(JSON.parse(entrante));
+    propio.current = entrante;
+  }, [entrante]);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
   if (!base) return null;
 
-  function aplicar(nuevo: any) {
-    setSpec(nuevo);
-    guardarLayout(sec, nuevo.fondo, nuevo.filas);
+  const bloques: Blk[] = spec.bloques;
+  const filasAlto = Math.max(6, ...bloques.map((b) => b.y + b.h));
+
+  /* Pinta ya, guarda agrupado. */
+  function aplicar(next: any, ya = false) {
+    setSpec(next);
+    propio.current = JSON.stringify(next);
+    clearTimeout(timer.current);
+    if (ya) guardarLayout(sec, next.fondo, next.bloques);
+    else timer.current = setTimeout(() => guardarLayout(sec, next.fondo, next.bloques), 400);
   }
-  function mover(fn: (filas: any[]) => void) {
-    const filas = spec.filas.map((f: any) => f.map((b: any) => [b[0], b[1]]));
-    fn(filas);
-    aplicar({ ...spec, filas: filas.filter((f: any) => f.length) });
+  const conBloques = (bs: Blk[], fijo?: string, ya = true) =>
+    aplicar({ ...specRef.current, bloques: acomodar(bs, fijo) }, ya);
+
+  const unidadX = () => {
+    const ancho = lienzo.current?.getBoundingClientRect().width ?? 1;
+    return (ancho - (COLS - 1) * GAP_PX) / COLS + GAP_PX;
+  };
+  const unidadY = () => FILA_PX + GAP_PX;
+
+  function restaurar() {
+    clearTimeout(timer.current);
+    const limpio = { fondo: base.fondo ?? "claro", bloques: aBloques(base) };
+    setSpec(limpio);
+    propio.current = JSON.stringify(limpio);
+    setSel(null);
+    borrarLayout(sec);
   }
 
-  const b = sel ? spec.filas[sel.fi]?.[sel.bi] : null;
+  /** Un solo gesto para mover y para estirar: cambia qué campos toca. */
+  function gestionar(e: any, id: string, modo: "mover" | "w" | "h" | "wh") {
+    e.preventDefault();
+    e.stopPropagation();
+    gesto.current = true;
+    setSel(id);
+    setGesteando(id);
+    const x0 = e.clientX, y0 = e.clientY;
+    const ini = bloques.find((b) => b.id === id)!;
+    const ux = unidadX(), uy = unidadY();
+
+    const mover = (ev: PointerEvent) => {
+      const dx = Math.round((ev.clientX - x0) / ux);
+      const dy = Math.round((ev.clientY - y0) / uy);
+      const bs = specRef.current.bloques.map((b: Blk) => ({ ...b }));
+      const b = bs.find((v: Blk) => v.id === id);
+      if (!b) return;
+      if (modo === "mover") {
+        b.x = topar(ini.x + dx, 0, COLS - b.w);
+        b.y = Math.max(0, ini.y + dy);
+      }
+      if (modo === "w" || modo === "wh") b.w = topar(ini.w + dx, 1, COLS - b.x);
+      if (modo === "h" || modo === "wh") b.h = Math.max(1, ini.h + dy);
+      aplicar({ ...specRef.current, bloques: acomodar(bs, id) });
+    };
+    const fin = () => {
+      window.removeEventListener("pointermove", mover);
+      window.removeEventListener("pointerup", fin);
+      gesto.current = false;
+      setGesteando(null);
+      clearTimeout(timer.current);
+      guardarLayout(sec, specRef.current.fondo, specRef.current.bloques);
+    };
+    window.addEventListener("pointermove", mover);
+    window.addEventListener("pointerup", fin);
+  }
+
+  function insertar(t: string, w: number) {
+    const usados = new Set(bloques.map((b) => b.id));
+    let id = t, n = 1;
+    while (usados.has(id)) id = `${t}-${++n}`;
+    const nuevo: Blk = { id, t, x: 0, y: proximoY(bloques), w, h: alto(t) };
+    conBloques([...bloques, nuevo], id);
+    setSel(id);
+    setPaleta(false);
+  }
+  function duplicar(id: string) {
+    const o = bloques.find((b) => b.id === id);
+    if (!o) return;
+    const usados = new Set(bloques.map((b) => b.id));
+    let nid = o.t, n = 1;
+    while (usados.has(nid)) nid = `${o.t}-${++n}`;
+    conBloques([...bloques, { ...o, id: nid, y: o.y + o.h }], nid);
+    setSel(nid);
+  }
+  function borrar(id: string) {
+    conBloques(bloques.filter((b) => b.id !== id));
+    setSel(null);
+  }
+  function nudge(id: string, campo: "x" | "y" | "w" | "h", d: number) {
+    const bs = bloques.map((b) => ({ ...b }));
+    const b = bs.find((v) => v.id === id);
+    if (!b) return;
+    if (campo === "x") b.x = topar(b.x + d, 0, COLS - b.w);
+    if (campo === "y") b.y = Math.max(0, b.y + d);
+    if (campo === "w") b.w = topar(b.w + d, 1, COLS - b.x);
+    if (campo === "h") b.h = Math.max(1, b.h + d);
+    conBloques(bs, id);
+  }
+
+  function teclas(e: any) {
+    if (!edit || !sel) return;
+    const conShift = e.shiftKey;
+    const mapa: Record<string, () => void> = {
+      ArrowLeft: () => nudge(sel, conShift ? "w" : "x", -1),
+      ArrowRight: () => nudge(sel, conShift ? "w" : "x", 1),
+      ArrowUp: () => nudge(sel, conShift ? "h" : "y", -1),
+      ArrowDown: () => nudge(sel, conShift ? "h" : "y", 1),
+      Delete: () => borrar(sel),
+      Backspace: () => borrar(sel),
+      Escape: () => { setSel(null); setTexto(null); setPaleta(false); },
+    };
+    const fn = mapa[e.key];
+    if (!fn) return;
+    e.preventDefault();
+    fn();
+  }
+
+  const b = sel ? bloques.find((v) => v.id === sel) : null;
+  const familias = [...new Set(PALETA.map(([f]) => f))];
 
   return (
-    <div className="wire">
-      <div className="wire-h">
-        <span>Wireframe · fondo {spec.fondo}{base.ref ? ` · inspirado en ${base.ref}` : ""}</span>
-        <button className={"wt" + (edit ? " on" : "")} onClick={() => { setEdit(!edit); setSel(null); }}>
-          {edit ? "Listo" : "Ajustar layout"}
-        </button>
+    <div className="mq">
+      <div className="mq-bar">
+        <span className="mq-meta">
+          Maqueta · fondo {spec.fondo}{base.ref ? ` · inspirado en ${base.ref}` : ""}
+        </span>
+        <div className="mq-acciones">
+          {edit && (
+            <button className="mq-btn" aria-expanded={paleta} onClick={() => setPaleta(!paleta)}>
+              + Agregar bloque
+            </button>
+          )}
+          {edit && hayOv && <button className="mq-btn sutil" onClick={restaurar}>Restaurar original</button>}
+          <button className={"mq-btn fuerte" + (edit ? " on" : "")}
+            onClick={() => { setEdit(!edit); setSel(null); setTexto(null); setPaleta(false); }}>
+            {edit ? "✓ Listo" : "✎ Editar maqueta"}
+          </button>
+        </div>
       </div>
 
-      {edit && (
-        <>
-          <div className="pal">
-            <span className="pal-l">Combinación de color</span>
-            {FONDOS.map(([k, label]) => (
-              <button key={k} className={`pal-b p-${k}${spec.fondo === k ? " on" : ""}`}
-                onClick={() => aplicar({ ...spec, fondo: k })}>{label}</button>
-            ))}
-          </div>
-          <div className="selbar">
-            {b ? (
-              <>
-                <span className="selbar-h">Bloque {b[0]}</span>
-                <span className="sb-lab">ancho</span>
-                <button className="sb-b" onClick={() => mover((f) => { f[sel!.fi][sel!.bi][1] = Math.max(1, f[sel!.fi][sel!.bi][1] - 1); })}>−</button>
-                <button className="sb-b" onClick={() => mover((f) => { f[sel!.fi][sel!.bi][1] = Math.min(12, f[sel!.fi][sel!.bi][1] + 1); })}>+</button>
-                <span className="sb-val">{b[1]}/12</span>
-                <span className="sb-lab">mover</span>
-                <button className="sb-b" disabled={sel!.bi === 0}
-                  onClick={() => { mover((f) => { const r = f[sel!.fi]; [r[sel!.bi - 1], r[sel!.bi]] = [r[sel!.bi], r[sel!.bi - 1]]; }); setSel({ ...sel!, bi: sel!.bi - 1 }); }}>←</button>
-                <button className="sb-b" disabled={sel!.bi >= spec.filas[sel!.fi].length - 1}
-                  onClick={() => { mover((f) => { const r = f[sel!.fi]; [r[sel!.bi + 1], r[sel!.bi]] = [r[sel!.bi], r[sel!.bi + 1]]; }); setSel({ ...sel!, bi: sel!.bi + 1 }); }}>→</button>
-                <button className="sb-b" disabled={sel!.fi === 0}
-                  onClick={() => { mover((f) => { const el = f[sel!.fi].splice(sel!.bi, 1)[0]; f[sel!.fi - 1].push(el); }); setSel(null); }}>↑</button>
-                <button className="sb-b" disabled={sel!.fi >= spec.filas.length - 1}
-                  onClick={() => { mover((f) => { const el = f[sel!.fi].splice(sel!.bi, 1)[0]; f[sel!.fi + 1].unshift(el); }); setSel(null); }}>↓</button>
-                <button className="sb-b" title="Fila propia"
-                  onClick={() => { mover((f) => { const el = f[sel!.fi].splice(sel!.bi, 1)[0]; f.splice(sel!.fi + 1, 0, [el]); }); setSel(null); }}>⤓</button>
-                <button className="sb-x" onClick={() => setSel(null)}>listo</button>
-              </>
-            ) : (
-              <span className="selbar-h">Tocá un bloque para moverlo o cambiarle el ancho</span>
-            )}
-          </div>
-        </>
+      {edit && paleta && (
+        <div className="mq-paleta">
+          {familias.map((f) => (
+            <div className="mq-fam" key={f}>
+              <span className="mq-fam-h">{f}</span>
+              <div className="mq-fam-b">
+                {PALETA.filter(([fam]) => fam === f).map(([, t, label, w]) => (
+                  <button key={t + label} className="mq-pieza" onClick={() => insertar(t, w)}>{label}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
-      <div className={`wf2 f-${spec.fondo}${edit ? " editando" : ""}`}>
-        {spec.filas.map((fila: any, fi: number) => (
-          <div className="wf2-row" key={fi}>
-            {fila.map((blk: any, bi: number) => (
-              <div key={bi}
-                className={"wf2-cell" + (sel?.fi === fi && sel?.bi === bi ? " sel" : "")}
-                style={{ flex: `${blk[1]} 1 0` }}
-                onClick={() => edit && setSel({ fi, bi })}>
-                {edit && <span className="grip">⠿ {blk[0]}</span>}
-                <Pieza tipo={blk[0]} sec={sec} copyDe={copyDe} guardarCopy={guardarCopy} editable={!edit} />
-              </div>
+      {edit && (
+        <div className="mq-tools">
+          <div className="mq-fondos">
+            {FONDOS.map(([k, label]) => (
+              <button key={k} className={`mq-fondo f-${k}${spec.fondo === k ? " on" : ""}`}
+                title={label} aria-label={label}
+                onClick={() => aplicar({ ...specRef.current, fondo: k }, true)} />
             ))}
+          </div>
+          {b ? (
+            <>
+              <span className="mq-sel">{b.t}</span>
+              <span className="mq-dato">x {b.x} · y {b.y} · {b.w}/12 · alto {b.h}</span>
+              <button className="mq-icono" title="Duplicar" onClick={() => duplicar(b.id)}>⧉</button>
+              <button className="mq-icono peligro" title="Borrar" onClick={() => borrar(b.id)}>🗑</button>
+            </>
+          ) : (
+            <span className="mq-dato">Arrastrá un bloque para moverlo · estirá de los bordes · doble clic para escribir</span>
+          )}
+        </div>
+      )}
+
+      <div className={`mq-canvas f-${spec.fondo}${edit ? " editando" : ""}`}
+        ref={lienzo}
+        tabIndex={edit ? 0 : -1}
+        onKeyDown={teclas}
+        onClick={(e) => { if (edit && e.target === e.currentTarget) setSel(null); }}
+        style={{ gridAutoRows: `${FILA_PX}px`, gap: `${GAP_PX}px`, minHeight: filasAlto * (FILA_PX + GAP_PX) }}>
+        {bloques.map((blk) => (
+          <div key={blk.id}
+            className={"mq-blk" + (sel === blk.id ? " sel" : "") + (gesteando === blk.id ? " gesteando" : "")}
+            style={{
+              gridColumn: `${blk.x + 1} / span ${blk.w}`,
+              gridRow: `${blk.y + 1} / span ${blk.h}`,
+            }}
+            onClick={(e) => { if (edit) { e.stopPropagation(); setSel(blk.id); } }}
+            onDoubleClick={() => edit && setTexto(blk.id)}>
+            {edit && (
+              <span className="mq-grip" onPointerDown={(e) => gestionar(e, blk.id, "mover")}>⠿ {blk.t}</span>
+            )}
+            <div className="mq-body">
+              <Pieza tipo={blk.t} id={blk.id} sec={sec} copyDe={copyDe} guardarCopy={guardarCopy}
+                editable={!edit || texto === blk.id} />
+            </div>
+            {edit && (
+              <>
+                <span className="mq-rs der" onPointerDown={(e) => gestionar(e, blk.id, "w")} />
+                <span className="mq-rs abajo" onPointerDown={(e) => gestionar(e, blk.id, "h")} />
+                <span className="mq-rs esquina" onPointerDown={(e) => gestionar(e, blk.id, "wh")} />
+              </>
+            )}
           </div>
         ))}
       </div>
-      {edit && <div className="wire-hint">Tocá un bloque y usá los botones de arriba. El copy se edita con el modo de ajuste apagado.</div>}
     </div>
   );
 }
 
-function Pieza({ tipo, sec, copyDe, guardarCopy, editable }: any) {
-  const texto = (k: string, cls: string, ph: string) => (
-    <div className={cls}
-      contentEditable={editable}
-      suppressContentEditableWarning
-      onBlur={(e) => guardarCopy(sec, k, e.currentTarget.textContent ?? "")}>
-      {copyDe(sec, k) || ph}
-    </div>
-  );
+function Pieza({ tipo, id, sec, copyDe, guardarCopy, editable }: any) {
+  /* La clave del copy es el id del bloque, así dos piezas del mismo tipo no comparten texto. */
+  const texto = (cls: string, ph: string, parte?: string) => {
+    const k = parte ? `${id}.${parte}` : id;
+    return (
+      <div className={cls}
+        contentEditable={editable}
+        suppressContentEditableWarning
+        onBlur={(e) => guardarCopy(sec, k, e.currentTarget.textContent ?? "")}>
+        {copyDe(sec, k) || ph}
+      </div>
+    );
+  };
   switch (tipo) {
     case "nav": return <div className="w-nav"><span className="w-logo">crehana</span><span className="w-links">Soluciones · Recursos · Nosotros · Clientes · Crehana AI</span><span className="w-navcta">Agenda un demo</span></div>;
-    case "eyebrow": return texto("eyebrow", "w-eyebrow", "EYEBROW");
-    case "h1": return texto("h1", "w-h1", "Titular");
-    case "h2": return texto("h2", "w-h2", "Título de sección");
-    case "h2mini": return texto("h2mini", "w-h2mini", "Título corto");
-    case "sub": return texto("sub", "w-sub", "Bajada");
-    case "nota": return texto("nota", "w-nota", "Nota al pie");
-    case "cta": return texto("cta", "w-cta", "CTA primario");
-    case "cta2": return texto("cta2", "w-cta2", "CTA secundario");
+    case "eyebrow": return texto("w-eyebrow", "EYEBROW");
+    case "h1": return texto("w-h1", "Titular");
+    case "h2": return texto("w-h2", "Título de sección");
+    case "h2mini": return texto("w-h2mini", "Título corto");
+    case "sub": return texto("w-sub", "Bajada");
+    case "nota": return texto("w-nota", "Nota al pie");
+    case "cta": return texto("w-cta", "CTA primario");
+    case "cta2": return texto("w-cta2", "CTA secundario");
     case "mock": return <div className="w-mock"><span>captura de producto</span></div>;
     case "mockmini": return <div className="w-mockmini"><span>captura</span></div>;
     case "form": return <div className="w-form"><span>formulario</span></div>;
     case "logos": return <div className="w-logos">{Array.from({ length: 7 }).map((_, i) => <span className="w-logo-ph" key={i} />)}</div>;
-    case "cifra": return <div className="w-cifra"><div className="w-num">—</div><div className="w-lab">métrica</div></div>;
+    case "cifra": return <div className="w-cifra">{texto("w-num", "—", "num")}{texto("w-lab", "métrica", "lab")}</div>;
     case "tabs": return <div className="w-tabs">{["Personas", "Reclutamiento", "Capacitación", "Desempeño", "Clima"].map((t, i) => <span className={"w-tab" + (i === 0 ? " on" : "")} key={t}>{t}</span>)}{["Nómina", "Asistencia"].map((t) => <span className="w-tab nuevo" key={t}>{t} ·nuevo</span>)}</div>;
     case "bullets": return <div className="w-bul">{[0, 1, 2].map((i) => <span className="w-bul-l" key={i} />)}</div>;
-    case "flujo": return texto("flujo", "w-flujo", "Asistencia → Nómina → Desarrollo");
-    case "agente": return <div className="w-ag"><span className="w-ag-ic" /><span className="w-ag-n">Agente</span></div>;
-    case "caso": return <div className="w-caso"><span className="w-caso-m">—%</span><span className="w-caso-c">cita breve</span><span className="w-caso-a">nombre · cargo</span></div>;
+    case "flujo": return texto("w-flujo", "Asistencia → Nómina → Desarrollo");
+    case "agente": return <div className="w-ag"><span className="w-ag-ic" />{texto("w-ag-n", "Agente", "n")}</div>;
+    case "caso": return <div className="w-caso">{texto("w-caso-m", "—%", "m")}{texto("w-caso-c", "cita breve", "c")}{texto("w-caso-a", "nombre · cargo", "a")}</div>;
     case "sellos": return <div className="w-sellos">{[0, 1, 2, 3].map((i) => <span className="w-sello" key={i} />)}</div>;
     default: return <div className="w-ph" />;
   }
@@ -532,11 +753,11 @@ function Resumen({ comp, senales, corridas }: any) {
   );
 }
 
-function Backlog({ backlog, setBacklog, home, aprobado, guardarAprob, hilos, comentar, setAviso }: any) {
+function Backlog({ backlog, setBacklog, home, aprobado, guardarAprob, hilos, comentar, setAviso, enEstaPagina }: any) {
   const ESTADOS = ["pendiente", "en diseño", "publicado"];
   const secciones = home.HOME?.secciones ?? [];
   const porSec: Record<string, any[]> = {};
-  backlog.forEach((b: any) => { (porSec[b.seccion] ??= []).push(b); });
+  backlog.filter(enEstaPagina).forEach((b: any) => { (porSec[b.seccion] ??= []).push(b); });
 
   async function cambiar(b: any, estado: string) {
     setBacklog((v: any[]) => v.map((x) => (x.id === b.id ? { ...x, estado } : x)));

@@ -811,6 +811,8 @@
     }
   ],
   "HOME": {
+    "nombre": "Home",
+    "url": "https://www.crehana.com/",
     "tarea": "Actualización Home con últimos lanzamientos",
     "objetivo": "Meter nómina y asistencia, todo el poder de Crehana AI con sus agentes, y testimonios con resultado — sin perder el territorio del journey del talento.",
     "benchmark": [
@@ -1423,52 +1425,61 @@
       "ref": "Zendesk · hero",
       "filas": [
         [
-          [
-            "nav",
-            12
-          ]
+          {
+            "id": "nav",
+            "t": "nav",
+            "w": 12
+          }
         ],
         [
-          [
-            "eyebrow",
-            7
-          ],
-          [
-            "ph",
-            5
-          ]
+          {
+            "id": "eyebrow",
+            "t": "eyebrow",
+            "w": 7
+          },
+          {
+            "id": "ph",
+            "t": "ph",
+            "w": 5
+          }
         ],
         [
-          [
-            "h1",
-            7
-          ],
-          [
-            "mock",
-            5
-          ]
+          {
+            "id": "h1",
+            "t": "h1",
+            "w": 7
+          },
+          {
+            "id": "mock",
+            "t": "mock",
+            "w": 5
+          }
         ],
         [
-          [
-            "sub",
-            7
-          ]
+          {
+            "id": "sub",
+            "t": "sub",
+            "w": 12
+          }
         ],
         [
-          [
-            "cta",
-            3
-          ],
-          [
-            "cta2",
-            3
-          ]
+          {
+            "id": "cta",
+            "t": "cta",
+            "w": 6
+          },
+          {
+            "id": "cta2",
+            "t": "cta2",
+            "w": 6
+          }
         ],
         [
-          [
-            "nota",
-            6
-          ]
+          {
+            "id": "nota",
+            "t": "nota",
+            "w": 12
+          }
         ]
       ]
     },
@@ -1477,14 +1488,16 @@
       "ref": "Zendesk · barra de logos",
       "filas": [
         [
-          [
-            "h2mini",
-            4
-          ],
-          [
-            "logos",
-            8
-          ]
+          {
+            "id": "h2mini",
+            "t": "h2mini",
+            "w": 4
+          },
+          {
+            "id": "logos",
+            "t": "logos",
+            "w": 8
+          }
         ]
       ]
     },
@@ -1493,28 +1506,33 @@
       "ref": "Rankmi · banda de métricas",
       "filas": [
         [
-          [
-            "h2",
-            12
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 12
+          }
         ],
         [
-          [
-            "cifra",
-            3
-          ],
-          [
-            "cifra",
-            3
-          ],
-          [
-            "cifra",
-            3
-          ],
-          [
-            "cifra",
-            3
-          ]
+          {
+            "id": "cifra",
+            "t": "cifra",
+            "w": 3
+          },
+          {
+            "id": "cifra-2",
+            "t": "cifra",
+            "w": 3
+          },
+          {
+            "id": "cifra-3",
+            "t": "cifra",
+            "w": 3
+          },
+          {
+            "id": "cifra-4",
+            "t": "cifra",
+            "w": 3
+          }
         ]
       ]
     },
@@ -1523,26 +1541,30 @@
       "ref": "Crehana · tabs actuales",
       "filas": [
         [
-          [
-            "h2",
-            12
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 12
+          }
         ],
         [
-          [
-            "tabs",
-            12
-          ]
+          {
+            "id": "tabs",
+            "t": "tabs",
+            "w": 12
+          }
         ],
         [
-          [
-            "mock",
-            7
-          ],
-          [
-            "bullets",
-            5
-          ]
+          {
+            "id": "mock",
+            "t": "mock",
+            "w": 7
+          },
+          {
+            "id": "bullets",
+            "t": "bullets",
+            "w": 5
+          }
         ]
       ]
     },
@@ -1551,26 +1573,30 @@
       "ref": "Rankmi · nómina",
       "filas": [
         [
-          [
-            "h2",
-            12
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 12
+          }
         ],
         [
-          [
-            "mockmini",
-            6
-          ],
-          [
-            "mockmini",
-            6
-          ]
+          {
+            "id": "mockmini",
+            "t": "mockmini",
+            "w": 6
+          },
+          {
+            "id": "mockmini-2",
+            "t": "mockmini",
+            "w": 6
+          }
         ],
         [
-          [
-            "flujo",
-            12
-          ]
+          {
+            "id": "flujo",
+            "t": "flujo",
+            "w": 12
+          }
         ]
       ]
     },
@@ -1579,60 +1605,72 @@
       "ref": "Zendesk · AI que aprende",
       "filas": [
         [
-          [
-            "h2",
-            12
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 12
+          }
         ],
         [
-          [
-            "sub",
-            12
-          ]
+          {
+            "id": "sub",
+            "t": "sub",
+            "w": 12
+          }
         ],
         [
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ]
+          {
+            "id": "agente",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-2",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-3",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-4",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-5",
+            "t": "agente",
+            "w": 2.4
+          }
         ],
         [
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ],
-          [
-            "agente",
-            2.4
-          ]
+          {
+            "id": "agente-6",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-7",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-8",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-9",
+            "t": "agente",
+            "w": 2.4
+          },
+          {
+            "id": "agente-10",
+            "t": "agente",
+            "w": 2.4
+          }
         ]
       ]
     },
@@ -1641,28 +1679,33 @@
       "ref": "Rankmi · casos con cifra",
       "filas": [
         [
-          [
-            "h2",
-            12
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 12
+          }
         ],
         [
-          [
-            "caso",
-            3
-          ],
-          [
-            "caso",
-            3
-          ],
-          [
-            "caso",
-            3
-          ],
-          [
-            "caso",
-            3
-          ]
+          {
+            "id": "caso",
+            "t": "caso",
+            "w": 3
+          },
+          {
+            "id": "caso-2",
+            "t": "caso",
+            "w": 3
+          },
+          {
+            "id": "caso-3",
+            "t": "caso",
+            "w": 3
+          },
+          {
+            "id": "caso-4",
+            "t": "caso",
+            "w": 3
+          }
         ]
       ]
     },
@@ -1671,14 +1714,16 @@
       "ref": "Buk · certificaciones",
       "filas": [
         [
-          [
-            "h2mini",
-            5
-          ],
-          [
-            "sellos",
-            7
-          ]
+          {
+            "id": "h2mini",
+            "t": "h2mini",
+            "w": 5
+          },
+          {
+            "id": "sellos",
+            "t": "sellos",
+            "w": 7
+          }
         ]
       ]
     },
@@ -1687,20 +1732,23 @@
       "ref": "Factorial · cierre con form",
       "filas": [
         [
-          [
-            "h2",
-            7
-          ],
-          [
-            "form",
-            5
-          ]
+          {
+            "id": "h2",
+            "t": "h2",
+            "w": 7
+          },
+          {
+            "id": "form",
+            "t": "form",
+            "w": 5
+          }
         ],
         [
-          [
-            "cta",
-            3
-          ]
+          {
+            "id": "cta",
+            "t": "cta",
+            "w": 12
+          }
         ]
       ]
     }

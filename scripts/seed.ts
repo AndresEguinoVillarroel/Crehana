@@ -31,7 +31,7 @@ async function main() {
   }
 
   await sb.from("home").upsert({
-    id: "actual",
+    id: "home",   // una fila por página del sitio
     data: { HOME: seed.HOME, UX: seed.UX, RECURSOS: seed.RECURSOS,
             WIRE: seed.WIRE, COPY_DEF: seed.COPY_DEF,
             REVISA: seed.REVISA, NO_REVISA: seed.NO_REVISA },

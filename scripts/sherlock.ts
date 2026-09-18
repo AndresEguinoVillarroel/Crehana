@@ -108,7 +108,8 @@ async function main() {
       capturadas[sitio.id] = [];
       for (const hecha of hechas) {
         const sufijo = sitio.tipo === "propio" ? "cre" : sitio.tipo === "referente" ? "ref" : "comp";
-        const id = `sec-${hecha.sec}-${sufijo}`;
+        /* Las capturas van dirigidas a una página del sitio. Hoy el agente sólo cubre el home. */
+        const id = `home/sec-${hecha.sec}-${sufijo}`;
         const url = await subir(sb, hecha.archivo, id, `${sitio.nombre} · ${HOY} · sección ${hecha.sec}`);
         capturadas[sitio.id].push({ sec: hecha.sec, url, archivo: hecha.archivo });
       }
