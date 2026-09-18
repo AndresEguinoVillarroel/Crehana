@@ -92,7 +92,6 @@ async function main() {
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36",
   });
-  const page = await ctx.newPage();
 
   const capturadas: Record<string, { sec: string; url: string; archivo: string }[]> = {};
   const caidas: string[] = [];
@@ -104,7 +103,11 @@ async function main() {
 
   for (const sitio of sitios) {
     try {
-      const hechas = await capturar(page, sitio.url, sitio.id);
+      /* Pestaña nueva por sitio: si uno se cae, su página de error y sus redirecciones pendientes
+         no pueden interrumpir la navegación del siguiente. */
+      const page = await ctx.newPage();
+      let hechas;
+      try { hechas = await capturar(page, sitio.url, sitio.id); } finally { await page.close(); }
       capturadas[sitio.id] = [];
       for (const hecha of hechas) {
         const sufijo = sitio.tipo === "propio" ? "cre" : sitio.tipo === "referente" ? "ref" : "comp";
@@ -135,6 +138,8 @@ async function main() {
   const semana = `${new Date().getFullYear()}-W${String(
     Math.ceil(((+new Date() - +new Date(new Date().getFullYear(), 0, 1)) / 86400000 + 1) / 7)
   ).padStart(2, "0")}`;
+  /* La semana sola no alcanza: dos corridas manuales en la misma semana se pisaban. */
+  const idCorrida = `${semana}-c${n}`;
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const prompt = fs.readFileSync(path.join(process.cwd(), "scripts", "prompt.md"), "utf8")
@@ -189,7 +194,7 @@ async function main() {
 
   // ---- guardar ----
   await sb.from("corridas").upsert({
-    id: semana,
+    id: idCorrida,
     n,
     fecha: HOY,
     headline: salida.headline,
@@ -199,7 +204,7 @@ async function main() {
 
   for (const s of salida.senales ?? []) {
     await sb.from("senales").upsert({
-      id: s.id, competidor: s.competidor, corrida: semana, sev: s.sev, cat: s.cat,
+      id: s.id, competidor: s.competidor, corrida: idCorrida, sev: s.sev, cat: s.cat,
       titulo: s.titulo, detalle: s.detalle, porque: s.porque, vs: s.vs ?? {},
       fuentes: s.fuentes ?? [], verificado: s.verificado ?? HOY,
     });
