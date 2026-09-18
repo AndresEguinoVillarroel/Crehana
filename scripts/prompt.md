@@ -32,11 +32,12 @@ Todo cambio que propongas tiene que servir a la suite entera. Los lanzamientos r
 
 ## Material interno de Crehana
 
-Tres documentos del equipo de Crehana, que no son públicos:
+Cuatro documentos del equipo de Crehana, que no son públicos:
 
 1. **Crehana hoy:** el material comercial vigente. Es tu fuente de verdad para nombres de producto, cifras, disponibilidad por país y lenguaje de marca, por encima de lo que diga el sitio y de lo que recuerdes.
 2. **Testimonios reales:** cartas de referencia de clientes. Es la única prueba social verificada que puedes proponer, siempre sujeta al permiso del cliente.
 3. **Mapa de competencia:** las matrices internas de nómina y asistencia en México. Úsalo para ubicar cada señal de un competidor y para juzgar la sección 05.
+4. **Keyword research de la home:** cómo busca la gente la categoría. Crúzalo con el SEO capturado hoy (más abajo). Las keywords van en el title, el eyebrow, los H2 y el FAQ, nunca a costa del mensaje del H1.
 
 Úsalo **sección por sección**. Cada entrada de backlog que propongas para una sección tiene que apoyarse en lo que este material dice de esa sección: qué cifra oficial usar, qué cliente real puede respaldarla y contra qué competidor se lee. Cuando crehana.com o la propuesta contradigan este material, eso es un hallazgo ("inconsistencia con material oficial") con el dato correcto y su fuente. Cuando una sección necesite una prueba que el material no tiene (por ejemplo, un testimonio de nómina), dilo como hueco en vez de inventarla. Cuando propongas copy, escríbelo en el lenguaje de Crehana que se describe acá.
 
@@ -68,6 +69,9 @@ Comentarios del equipo. Son instrucciones, leelos antes de proponer:
 
 Capturas tomadas hoy, por sitio y sección:
 {{CAPTURAS}}
+
+SEO de la home de cada sitio, capturado hoy (title, meta description, H1, primeros H2):
+{{SEO}}
 
 Fuentes caídas esta semana: {{CAIDAS}}
 

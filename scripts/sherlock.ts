@@ -44,6 +44,17 @@ async function capturar(page: Page, url: string, slug: string) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(2500);
 
+  /* Lo que lee Google, que en una captura no se ve: sirve para cruzar contra el keyword research. */
+  const seo = await page.evaluate(() => {
+    const txt = (el: Element) => (el.textContent ?? "").replace(/\s+/g, " ").trim();
+    return {
+      title: document.title,
+      description: document.querySelector('meta[name="description"]')?.getAttribute("content") ?? "",
+      h1: [...document.querySelectorAll("h1")].map(txt).filter(Boolean),
+      h2: [...document.querySelectorAll("h2")].map(txt).filter(Boolean).slice(0, 15),
+    };
+  }).catch(() => null);
+
   let ultimo = 0;
   for (const tramo of TRAMOS) {
     if (tramo.scroll > ultimo) {
@@ -55,7 +66,7 @@ async function capturar(page: Page, url: string, slug: string) {
     await page.screenshot({ path: archivo, quality: 72, type: "jpeg" });
     hechas.push({ archivo, sec: tramo.sec });
   }
-  return hechas;
+  return { hechas, seo };
 }
 
 async function subir(sb: ReturnType<typeof adminDb>, archivo: string, id: string, pie: string) {
@@ -79,7 +90,7 @@ async function subir(sb: ReturnType<typeof adminDb>, archivo: string, id: string
 }
 
 /** Orden de lectura: primero qué es Crehana, después la prueba social y al final la competencia. */
-const MATERIAL = ["crehana.md", "testimonios.md", "competencia.md"];
+const MATERIAL = ["crehana.md", "testimonios.md", "competencia.md", "keywords.md"];
 
 /**
  * El material interno de Crehana vive en el bucket privado `contexto`, no en git: el repo es público.
@@ -130,6 +141,7 @@ async function main() {
 
   const capturadas: Record<string, { sec: string; url: string; archivo: string }[]> = {};
   const caidas: string[] = [];
+  const seoPorSitio: Record<string, unknown> = {};
 
   const sitios = [
     ...comps.map((c: any) => ({ id: c.id, nombre: c.nombre, tipo: c.tipo, url: `https://${String(c.sitio).replace(/^https?:\/\//, "")}` })),
@@ -141,8 +153,9 @@ async function main() {
       /* Pestaña nueva por sitio: si uno se cae, su página de error y sus redirecciones pendientes
          no pueden interrumpir la navegación del siguiente. */
       const page = await ctx.newPage();
-      let hechas;
-      try { hechas = await capturar(page, sitio.url, sitio.id); } finally { await page.close(); }
+      let hechas, seo;
+      try { ({ hechas, seo } = await capturar(page, sitio.url, sitio.id)); } finally { await page.close(); }
+      if (seo) seoPorSitio[sitio.nombre] = seo;
       capturadas[sitio.id] = [];
       for (const hecha of hechas) {
         const sufijo = sitio.tipo === "propio" ? "cre" : sitio.tipo === "referente" ? "ref" : "comp";
@@ -191,6 +204,7 @@ async function main() {
     .replace("{{HILOS}}", JSON.stringify(hilos ?? [], null, 1))
     .replace("{{CAPTURAS}}", JSON.stringify(capturadas, null, 1))
     .replace("{{CAIDAS}}", caidas.join("; ") || "ninguna")
+    .replace("{{SEO}}", () => JSON.stringify(seoPorSitio, null, 1))
     .replace("{{CREHANA}}", () => crehana);
 
   // Las capturas del hero de cada sitio entran como imágenes para que Claude las mire de verdad.
