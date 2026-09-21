@@ -6,6 +6,7 @@ import { aBloques, acomodar, alto, proximoY, topar, COLS, type Alineacion, type 
 import { Guardado, Ic, Paleta, Sidebar, usePreferencia, type Destino, type EstadoGuardado } from "./navegacion";
 import { Research } from "./research";
 import { Presentacion } from "./presentacion";
+import { armarBrief } from "./brief";
 
 const REVISORES = ["Xime", "Yess"];
 /** El portafolio completo, en el orden del menú de crehana.com. Los nuevos suman, no reemplazan. */
@@ -55,6 +56,7 @@ export default function Tablero(props: any) {
     try { localStorage.setItem("sherlock:yo", p); } catch {}
   };
   const [aviso, setAviso] = useState("");
+  const [copiado, setCopiado] = useState(false);
   /* Los errores quedan fijos en el indicador de guardado; el aviso puede irse solo. */
   useEffect(() => {
     if (!aviso) return;
@@ -181,6 +183,27 @@ export default function Tablero(props: any) {
     setAviso(r.ok ? j.mensaje : "No se pudo lanzar: " + j.error);
   }
 
+  /** Resumen de la página para pasárselo a una IA: al portapapeles y como archivo .md. */
+  async function exportarBrief() {
+    const texto = armarBrief({
+      home, pagina, nombrePagina: pagina,
+      layoutDe, copyDe, backlog, valorAprob, revisores: REVISORES, hilos,
+      corrida: corridas[0],
+    });
+    try {
+      await navigator.clipboard.writeText(texto);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2500);
+    } catch {
+      setAviso("No se pudo copiar al portapapeles, pero el archivo se descargó igual.");
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([texto], { type: "text/markdown;charset=utf-8" }));
+    a.download = `${pagina}-cambios-${new Date().toISOString().slice(0, 10)}.md`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   /* ---- navegación ---- */
   const [menu, setMenu] = useState(false);
   const [mini, setMini] = usePreferencia("mini", false);
@@ -282,9 +305,15 @@ export default function Tablero(props: any) {
             <div className="bar-right">
               {(vista === "home" || vista === "backlog") && <Guardado g={guardado} />}
               {vista === "home" && (
-                <button className="btn ghost" onClick={() => setPresentando(true)} title="Presentar" aria-label="Presentar">
-                  <Ic n="presentar" /> <span className="lbl">Presentar</span>
-                </button>
+                <>
+                  <button className="btn ghost" onClick={exportarBrief}
+                    title="Copiar el resumen de cambios para pasárselo a una IA" aria-label="Exportar para IA">
+                    <Ic n="duplicar" /> <span className="lbl">{copiado ? "¡Copiado!" : "Exportar para IA"}</span>
+                  </button>
+                  <button className="btn ghost" onClick={() => setPresentando(true)} title="Presentar" aria-label="Presentar">
+                    <Ic n="presentar" /> <span className="lbl">Presentar</span>
+                  </button>
+                </>
               )}
               <button className="btn ghost" onClick={correrAhora} title="Correr ahora" aria-label="Correr ahora">
                 <Ic n="correr" /> <span className="lbl">Correr ahora</span>
