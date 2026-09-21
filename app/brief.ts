@@ -26,7 +26,7 @@ const FONDOS: Record<string, string> = {
 };
 
 /** Cómo se llama cada pieza en palabras, para que la IA sepa qué componente construir. */
-const PIEZAS: Record<string, string> = {
+export const PIEZAS: Record<string, string> = {
   nav: "barra de navegación", eyebrow: "línea de categoría sobre el titular",
   h1: "titular principal (H1)", h2: "título de sección (H2)", h2mini: "título corto (H3)",
   sub: "bajada / párrafo", nota: "nota al pie, texto chico",

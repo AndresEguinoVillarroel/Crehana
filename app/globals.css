@@ -360,6 +360,7 @@
   .w-tab{font-size:11px;padding:5px 9px;border-radius:6px;background:rgba(20,0,88,.07)}
   .w-tab.on{background:var(--brand);color:#fff}
   .w-tab.nuevo{border:1px dashed var(--brand);color:var(--brand)}
+  .w-tab.on.nuevo{color:#fff;border-color:rgba(255,255,255,.55)}
   .w-bul{display:flex;flex-direction:column;gap:8px;padding-top:6px}
   .w-bul-l{height:9px;border-radius:4px;background:rgba(20,0,88,.12)}
   .w-bul-l:last-child{width:62%}
@@ -373,6 +374,13 @@
   .w-caso-a{font-family:var(--mono);font-size:10px;opacity:.55}
   .w-sellos{display:flex;gap:10px;flex-wrap:wrap}
   .w-sello{width:42px;height:42px;border-radius:50%;background:rgba(20,0,88,.12)}
+
+  /* modo wireframe: qué es cada bloque y cuánto ocupa */
+  .mq-canvas.estructura .mq-blk{outline:1px dashed rgba(72,34,244,.35);outline-offset:2px;border-radius:6px;position:relative}
+  .mq-canvas.estructura.f-profundo .mq-blk{outline-color:rgba(255,255,255,.35)}
+  .mq-canvas.estructura .mq-body{opacity:.5}
+  .mq-tag{position:absolute;top:-9px;left:6px;z-index:2;padding:1px 6px;border-radius:5px;background:var(--brand);color:#fff;font-family:var(--mono);font-size:9px;letter-spacing:.03em;white-space:nowrap;pointer-events:none}
+  .mq-canvas.estructura.f-lima .mq-tag{background:var(--deep)}
 
   /* propuestas de estructura que trae cada corrida */
   .mq-vars{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:0 0 10px}

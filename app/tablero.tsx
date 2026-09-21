@@ -6,11 +6,11 @@ import { aBloques, acomodar, alto, proximoY, topar, COLS, type Alineacion, type 
 import { Guardado, Ic, Paleta, Sidebar, usePreferencia, type Destino, type EstadoGuardado } from "./navegacion";
 import { Research } from "./research";
 import { Presentacion } from "./presentacion";
-import { armarBrief } from "./brief";
+import { armarBrief, PIEZAS } from "./brief";
 
 const REVISORES = ["Xime", "Yess"];
-/** El portafolio completo, en el orden del menú de crehana.com. Los nuevos suman, no reemplazan. */
-const PRODUCTOS = ["Personas", "Nómina", "Reclutamiento", "Desempeño", "Clima", "Capacitación", "People Analytics", "Asistencia", "Integraciones", "Crehana AI"];
+/** El portafolio completo. Nómina y Asistencia van primeras: son el lanzamiento y así no se repiten después. */
+const PRODUCTOS = ["Nómina", "Asistencia", "Personas", "Reclutamiento", "Capacitación", "Desempeño", "Clima", "People Analytics", "Integraciones", "Crehana AI"];
 const NUEVOS = ["Nómina", "Asistencia"];
 
 /** Quién puede firmar, y qué hace cada una en el flujo. */
@@ -57,6 +57,8 @@ export default function Tablero(props: any) {
   };
   const [aviso, setAviso] = useState("");
   const [copiado, setCopiado] = useState(false);
+  /* Modo wireframe: el equipo pidió ver la estructura, no solo el resultado. */
+  const [estructura, setEstructura] = usePreferencia("ver-estructura", false);
   /* Los errores quedan fijos en el indicador de guardado; el aviso puede irse solo. */
   useEffect(() => {
     if (!aviso) return;
@@ -328,6 +330,7 @@ export default function Tablero(props: any) {
               home={home} copyDe={copyDe} guardarCopy={guardarCopy}
               layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
               variantesDe={variantesDe} aplicarVariante={aplicarVariante}
+              estructura={estructura} setEstructura={setEstructura}
               cap={cap} backlog={backlog} aprob={aprob} aprobado={aprobado}
               guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} yo={yo}
               pagina={pagina} claveSec={claveSec} enEstaPagina={enEstaPagina}
@@ -365,7 +368,7 @@ export default function Tablero(props: any) {
 
 /* ---------------- Propuesta de home ---------------- */
 
-function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, cap, backlog, aprobado, valorAprob, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina, ir }: any) {
+function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, estructura, setEstructura, cap, backlog, aprobado, valorAprob, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina, ir }: any) {
   const [edit, setEdit] = useState<Record<string, boolean>>({});
   const [plegadas, setPlegadas] = usePreferencia<Record<string, boolean>>(`plegadas:${pagina}`, {});
   const [hiloAbierto, setHiloAbierto] = useState<string | null>(null);
@@ -453,6 +456,7 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, bor
                         sec={x.n} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
                         layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
                         variantesDe={variantesDe} aplicarVariante={aplicarVariante}
+                        estructura={estructura} setEstructura={setEstructura}
                         edit={!!edit[x.n]} setEdit={(v: boolean) => setEdit({ ...edit, [x.n]: v })}
                       />
                       <div className="shot-trio">
@@ -572,7 +576,7 @@ const PALETA: [string, string, string, number][] = [
   ["Estructura", "ph", "Espacio", 4],
 ];
 
-function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, edit, setEdit, lectura }: any) {
+function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, estructura, setEstructura, edit, setEdit, lectura }: any) {
   const base = home.WIRE?.[sec];
   const ov = layoutDe(sec);
   const hayOv = !!ov && !!(ov.bloques?.length || ov.filas?.length);
@@ -749,6 +753,10 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
           Maqueta · fondo {spec.fondo}{base.ref ? ` · inspirado en ${base.ref}` : ""}
         </span>
         <div className="mq-acciones">
+          <button className={"mq-btn" + (estructura ? " on" : "")} aria-pressed={!!estructura}
+            title="Mostrar el nombre y el ancho de cada bloque" onClick={() => setEstructura?.(!estructura)}>
+            <Ic n="lista" /> Ver estructura
+          </button>
           {edit && (
             <button className="mq-btn" aria-expanded={paleta} onClick={() => setPaleta(!paleta)}>
               + Agregar bloque
@@ -822,7 +830,7 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
         </div>
       )}
 
-      <div className={`mq-canvas f-${spec.fondo}${edit ? " editando" : ""}`}
+      <div className={`mq-canvas f-${spec.fondo}${edit ? " editando" : ""}${estructura ? " estructura" : ""}`}
         ref={lienzo}
         tabIndex={edit ? 0 : -1}
         onKeyDown={teclas}
@@ -839,6 +847,9 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
             onDoubleClick={() => edit && setTexto(blk.id)}>
             {edit && (
               <span className="mq-grip" onPointerDown={(e) => gestionar(e, blk.id, "mover")}><Ic n="agarre" />{blk.t}</span>
+            )}
+            {estructura && !edit && (
+              <span className="mq-tag">{PIEZAS[blk.t] ?? blk.t} · {blk.w}/12</span>
             )}
             <div className="mq-body" data-a={blk.a ?? "izq"}>
               <Pieza tipo={blk.t} id={blk.id} sec={sec} copyDe={copyDe} guardarCopy={guardarCopy}
@@ -872,7 +883,8 @@ function Pieza({ tipo, id, sec, copyDe, guardarCopy, editable }: any) {
     );
   };
   switch (tipo) {
-    case "nav": return <div className="w-nav"><span className="w-logo">crehana</span><span className="w-links">Soluciones · Recursos · Nosotros · Clientes · Crehana AI</span><span className="w-navcta">Agenda un demo</span></div>;
+    /* El menú se mantiene como el de la plataforma actual, con Agentes IA dentro de Crehana AI. */
+    case "nav": return <div className="w-nav"><span className="w-logo">crehana</span>{texto("w-links", "Soluciones · Recursos · Nosotros · Clientes · Crehana AI › Agentes IA", "links")}<span className="w-navcta">Agenda un demo</span></div>;
     case "eyebrow": return texto("w-eyebrow", "EYEBROW");
     case "h1": return texto("w-h1", "Titular");
     case "h2": return texto("w-h2", "Título de sección");
