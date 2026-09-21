@@ -100,6 +100,13 @@ Las piezas con partes editables llevan su copy con la parte después del punto: 
 
 Cuidá el alto: un bloque no crece solo. Un `nota` de dos líneas necesita `h: 2`, y un `caso` con cita larga en 3 columnas necesita `h: 9`.
 
+**Armala como si fuera el sitio, no como una lista de bloques:**
+- Las tarjetas (`caso`, `modulo`, `plan`, `chat`, `agente`, `mock`, `video`, `comparativa`) se estiran al alto de su bloque; el texto no. Un título de una línea en un bloque de tres filas deja un hueco muerto.
+- No dejes media pantalla vacía. Si el titular ocupa 7 columnas, las otras 5 llevan algo: la captura, el video, la reseña o el chat.
+- Las columnas que van lado a lado terminan parejas. Sumá los altos y hacé que cierren en la misma fila.
+- Nada de filas en blanco entre bloques: si hay un hueco, subí el bloque o agrandá el de arriba.
+- Un bloque de texto ancho (`sub`, `nota`) con copy largo necesita más alto del que parece; contá dos líneas cada 60 caracteres a la mitad del ancho.
+
 **Qué NO es una propuesta:**
 - Mover un bloque dos columnas o cambiar el fondo. Eso es un ajuste, no una estructura.
 - Repetir el patrón que ya tenemos: título arriba, tres tarjetas iguales abajo, captura a la derecha.
