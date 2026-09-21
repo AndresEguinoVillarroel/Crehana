@@ -39,6 +39,7 @@ export default function Tablero(props: any) {
   const [hilos, setHilos] = useState<any[]>(props.hilosIniciales);
   const [copys, setCopys] = useState<any[]>(props.copysIniciales);
   const [layouts, setLayouts] = useState<any[]>(props.layoutsIniciales);
+  const [variantes, setVariantes] = useState<any[]>(props.variantesIniciales ?? []);
   /* La identidad vive en el navegador de cada persona. Si nunca eligió, se le pregunta antes de nada. */
   const [yo, setYoEstado] = useState<string>("");
   const [preguntarQuien, setPreguntarQuien] = useState(false);
@@ -69,7 +70,7 @@ export default function Tablero(props: any) {
         const tabla = payload.table;
         const setters: Record<string, any> = {
           backlog: setBacklog, capturas: setCapturas, aprobaciones: setAprob,
-          hilos: setHilos, copys: setCopys, layouts: setLayouts,
+          hilos: setHilos, copys: setCopys, layouts: setLayouts, variantes: setVariantes,
         };
         if (!setters[tabla]) return;
         const { data } = await db.from(tabla).select("*");
@@ -89,6 +90,18 @@ export default function Tablero(props: any) {
   const copyDe = (sec: string, k: string) =>
     copys.find((c: any) => enEstaPagina(c) && c.seccion === sec)?.valores?.[k] ?? home.COPY_DEF?.[sec]?.[k] ?? "";
   const layoutDe = (sec: string) => layouts.find((l: any) => enEstaPagina(l) && l.seccion === sec);
+  const variantesDe = (sec: string) => variantes.filter((v: any) => enEstaPagina(v) && v.seccion === sec);
+  /** Aplica una propuesta del agente: pisa la maqueta de la sección y su copy sugerido. */
+  async function aplicarVariante(sec: string, v: any) {
+    await guardarLayout(sec, v.fondo ?? "claro", v.bloques ?? []);
+    if (v.copy && Object.keys(v.copy).length) {
+      const previo = copys.find((c: any) => enEstaPagina(c) && c.seccion === sec)?.valores ?? {};
+      const valores = { ...previo, ...v.copy };
+      setCopys((x) => [...x.filter((c) => otraSeccion(c, sec)), { pagina, seccion: sec, valores }]);
+      await persistir("el texto", () =>
+        db.from("copys").upsert({ pagina, seccion: sec, valores, actualizado: new Date().toISOString() }));
+    }
+  }
   const aprobado = (clave: string) =>
     REVISORES.filter((r) => aprob.find((a: any) => a.id === `${pagina}/${clave}__${r}` && a.valor === "si"));
   /** "si", "no" o null: lo que decidió cada revisora, para poder mostrar también los rechazos. */
@@ -285,6 +298,7 @@ export default function Tablero(props: any) {
             <PropuestaHome
               home={home} copyDe={copyDe} guardarCopy={guardarCopy}
               layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
+              variantesDe={variantesDe} aplicarVariante={aplicarVariante}
               cap={cap} backlog={backlog} aprob={aprob} aprobado={aprobado}
               guardarAprob={guardarAprob} hilos={hilos} comentar={comentar} yo={yo}
               pagina={pagina} claveSec={claveSec} enEstaPagina={enEstaPagina}
@@ -322,7 +336,7 @@ export default function Tablero(props: any) {
 
 /* ---------------- Propuesta de home ---------------- */
 
-function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, cap, backlog, aprobado, valorAprob, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina, ir }: any) {
+function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, cap, backlog, aprobado, valorAprob, guardarAprob, hilos, comentar, yo, pagina, claveSec, enEstaPagina, ir }: any) {
   const [edit, setEdit] = useState<Record<string, boolean>>({});
   const [plegadas, setPlegadas] = usePreferencia<Record<string, boolean>>(`plegadas:${pagina}`, {});
   const [hiloAbierto, setHiloAbierto] = useState<string | null>(null);
@@ -409,6 +423,7 @@ function PropuestaHome({ home, copyDe, guardarCopy, layoutDe, guardarLayout, bor
                       <Maqueta
                         sec={x.n} home={home} copyDe={copyDe} guardarCopy={guardarCopy}
                         layoutDe={layoutDe} guardarLayout={guardarLayout} borrarLayout={borrarLayout}
+                        variantesDe={variantesDe} aplicarVariante={aplicarVariante}
                         edit={!!edit[x.n]} setEdit={(v: boolean) => setEdit({ ...edit, [x.n]: v })}
                       />
                       <div className="shot-trio">
@@ -514,12 +529,21 @@ const PALETA: [string, string, string, number][] = [
   ["Contenido", "tabs", "Tabs", 12],
   ["Contenido", "bullets", "Bullets", 4],
   ["Contenido", "sellos", "Sellos", 6],
+  ["Contenido", "carrusel", "Carrusel de logos", 8],
+  ["Contenido", "rating", "Reseñas de terceros", 4],
+  ["Contenido", "chat", "Chat de Crehana AI", 5],
+  ["Contenido", "modulo", "Tarjeta de módulo", 3],
+  ["Contenido", "video", "Video / demo", 4],
+  ["Acción", "plan", "Plan con precio", 3],
   ["Estructura", "nav", "Navegación", 12],
   ["Estructura", "flujo", "Flujo", 8],
+  ["Estructura", "circuito", "Circuito de pasos", 12],
+  ["Estructura", "comparativa", "Antes / con Crehana", 6],
+  ["Estructura", "faq", "FAQ", 8],
   ["Estructura", "ph", "Espacio", 4],
 ];
 
-function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, edit, setEdit, lectura }: any) {
+function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borrarLayout, variantesDe, aplicarVariante, edit, setEdit, lectura }: any) {
   const base = home.WIRE?.[sec];
   const ov = layoutDe(sec);
   const hayOv = !!ov && !!(ov.bloques?.length || ov.filas?.length);
@@ -683,6 +707,11 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
 
   const b = sel ? bloques.find((v) => v.id === sel) : null;
   const familias = [...new Set(PALETA.map(([f]) => f))];
+  /* Propuestas de estructura de las corridas, y cuál está puesta ahora mismo. */
+  const propuestas: any[] = variantesDe?.(sec) ?? [];
+  const firma = JSON.stringify(bloques.map((x) => [x.t, x.x, x.y, x.w, x.h]));
+  const aplicada = propuestas.find((v) =>
+    JSON.stringify(aBloques(v).map((x) => [x.t, x.x, x.y, x.w, x.h])) === firma)?.id;
 
   return (
     <div className={"mq" + (lectura ? " lectura" : "")}>
@@ -703,6 +732,21 @@ function Maqueta({ sec, home, copyDe, guardarCopy, layoutDe, guardarLayout, borr
           </button>
         </div>
       </div>}
+
+      {!lectura && propuestas.length > 0 && (
+        <div className="mq-vars">
+          <span className="mq-vars-h">Propuestas del agente</span>
+          {propuestas.map((v: any) => (
+            <button key={v.id} className={"mq-var" + (aplicada === v.id ? " on" : "")}
+              title={[v.apuesta, v.contra && `Se despega de: ${v.contra}`].filter(Boolean).join("\n\n")}
+              onClick={() => aplicarVariante(sec, v)}>
+              <b>{v.nombre}</b>
+              {v.apuesta && <span>{v.apuesta}</span>}
+            </button>
+          ))}
+          {hayOv && <button className="mq-var sutil" onClick={restaurar}>Volver al original</button>}
+        </div>
+      )}
 
       {edit && paleta && (
         <div className="mq-paleta">
@@ -819,6 +863,51 @@ function Pieza({ tipo, id, sec, copyDe, guardarCopy, editable }: any) {
     case "agente": return <div className="w-ag"><span className="w-ag-ic" />{texto("w-ag-n", "Agente", "n")}</div>;
     case "caso": return <div className="w-caso">{texto("w-caso-m", "—%", "m")}{texto("w-caso-c", "cita breve", "c")}{texto("w-caso-a", "nombre · cargo", "a")}</div>;
     case "sellos": return <div className="w-sellos">{[0, 1, 2, 3].map((i) => <span className="w-sello" key={i} />)}</div>;
+    case "carrusel": return (
+      <div className="w-carr">
+        <span className="w-carr-fl">‹</span>
+        <div className="w-carr-pista">{Array.from({ length: 5 }).map((_, i) => <span className="w-logo-ph" key={i} />)}</div>
+        <span className="w-carr-fl">›</span>
+        <div className="w-carr-pts">{[0, 1, 2].map((i) => <i className={i === 0 ? "on" : ""} key={i} />)}</div>
+      </div>
+    );
+    case "rating": return (
+      <div className="w-rat"><span className="w-rat-est">★★★★★</span>{texto("w-rat-t", "4.6/5 en Capterra · 800+ reseñas")}</div>
+    );
+    case "chat": return (
+      <div className="w-chat">
+        {texto("w-chat-n", "Crehana AI · Scout", "n")}
+        {texto("w-chat-p", "¿Quién tiene el desempeño más alto este trimestre?", "p")}
+        {texto("w-chat-r", "La respuesta del agente, en lenguaje natural.", "r")}
+      </div>
+    );
+    case "circuito": return (
+      <div className="w-circ">
+        {["p1", "p2", "p3", "p4"].map((p, i) => (
+          <span className="w-circ-n" key={p}>{i > 0 && <i className="w-circ-fl">→</i>}{texto("w-circ-t", `Paso ${i + 1}`, p)}</span>
+        ))}
+      </div>
+    );
+    case "modulo": return (
+      <div className="w-mod"><span className="w-mod-ic" />{texto("w-mod-n", "Crehana Core", "n")}{texto("w-mod-d", "qué resuelve, en una línea", "d")}</div>
+    );
+    case "plan": return (
+      <div className="w-plan">{texto("w-plan-n", "Plan", "n")}{texto("w-plan-p", "desde US$ —", "p")}{texto("w-plan-d", "qué incluye", "d")}<span className="w-plan-cta">Ver planes</span></div>
+    );
+    case "video": return (
+      <div className="w-video"><span className="w-video-play">▶</span>{texto("w-video-t", "Demo grabada · 3 min", "t")}</div>
+    );
+    case "faq": return (
+      <div className="w-faq">{["q1", "q2", "q3"].map((q, i) => (
+        <span className="w-faq-l" key={q}>{texto("w-faq-q", `¿Pregunta ${i + 1}?`, q)}<i>+</i></span>
+      ))}</div>
+    );
+    case "comparativa": return (
+      <div className="w-comp">
+        <div className="w-comp-c">{texto("w-comp-h", "Antes", "a")}<span className="w-bul-l" /><span className="w-bul-l" /></div>
+        <div className="w-comp-c con">{texto("w-comp-h", "Con Crehana", "b")}<span className="w-bul-l" /><span className="w-bul-l" /></div>
+      </div>
+    );
     default: return <div className="w-ph" />;
   }
 }

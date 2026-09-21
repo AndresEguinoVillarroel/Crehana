@@ -57,6 +57,21 @@ create table if not exists backlog (
   actualizado timestamptz default now()
 );
 
+-- Propuestas de estructura del agente: varias por sección, para comparar antes de aplicar.
+create table if not exists variantes (
+  id text primary key,                       -- "<pagina>/<seccion>/<slug>"
+  pagina text not null default 'home',
+  seccion text not null,                     -- 01..09
+  nombre text not null,                      -- cómo se llama la propuesta
+  apuesta text,                              -- qué arriesga y por qué
+  contra text,                               -- de qué se despega (nuestra home o un competidor)
+  fondo text default 'claro',
+  bloques jsonb not null default '[]'::jsonb,
+  copy jsonb default '{}'::jsonb,            -- textos sugeridos por bloque
+  corrida text,
+  creado timestamptz default now()
+);
+
 create table if not exists aprobaciones (
   id text primary key,                       -- "<clave>__<revisora>"
   clave text not null,                       -- sección 01..09 o bk-<id>
@@ -142,7 +157,7 @@ do $$
 declare t text;
 begin
   foreach t in array array['competidores','corridas','senales','triage','backlog',
-                           'aprobaciones','hilos','capturas','copys','layouts','home']
+                           'aprobaciones','hilos','capturas','copys','layouts','variantes','home']
   loop
     execute format('alter table %I enable row level security', t);
     execute format('drop policy if exists equipo_lee on %I', t);
@@ -158,7 +173,7 @@ do $$
 declare t text;
 begin
   foreach t in array array['competidores','corridas','senales','triage','backlog',
-                           'aprobaciones','hilos','capturas','copys','layouts','home']
+                           'aprobaciones','hilos','capturas','copys','layouts','variantes','home']
   loop
     if not exists (
       select 1 from pg_publication_tables

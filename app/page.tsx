@@ -4,7 +4,7 @@ import Tablero from "./tablero";
 export const revalidate = 0;
 
 export default async function Page() {
-  const [competidores, senales, backlog, capturas, aprobaciones, hilos, copys, layouts, home, corridas] =
+  const [competidores, senales, backlog, capturas, aprobaciones, hilos, copys, layouts, variantes, home, corridas] =
     await Promise.all([
       db.from("competidores").select("*").order("tipo", { ascending: true }),
       db.from("senales").select("*"),
@@ -14,6 +14,7 @@ export default async function Page() {
       db.from("hilos").select("*").order("creado"),
       db.from("copys").select("*"),
       db.from("layouts").select("*"),
+      db.from("variantes").select("*").order("creado", { ascending: false }),
       db.from("home").select("*").order("id"),   // una fila por página del sitio
       db.from("corridas").select("*").order("n", { ascending: false }),
     ]);
@@ -40,6 +41,7 @@ export default async function Page() {
       hilosIniciales={hilos.data ?? []}
       copysIniciales={copys.data ?? []}
       layoutsIniciales={layouts.data ?? []}
+      variantesIniciales={variantes.data ?? []}
       paginas={home.data}
       corridas={corridas.data ?? []}
     />

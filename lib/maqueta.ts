@@ -16,6 +16,8 @@ export const ALTOS: Record<string, number> = {
   cta: 2, cta2: 2, mock: 4, mockmini: 3, form: 4, logos: 2,
   cifra: 3, tabs: 2, bullets: 2, flujo: 1, agente: 2, caso: 4,
   sellos: 2, ph: 1,
+  carrusel: 3, rating: 2, chat: 6, circuito: 2, modulo: 4,
+  plan: 5, video: 4, faq: 4, comparativa: 5,
 };
 
 export const alto = (t: string) => ALTOS[t] ?? 2;

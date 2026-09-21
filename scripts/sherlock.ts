@@ -181,14 +181,35 @@ async function main() {
   await navegador.close();
 
   // ---- análisis con Claude ----
-  const [{ data: corridas }, { data: backlog }, { data: aprob }, { data: hilos }, { data: senales }] =
+  const [{ data: corridas }, { data: backlog }, { data: aprob }, { data: hilos }, { data: senales },
+         { data: paginas }, { data: layouts }, { data: copys }] =
     await Promise.all([
       sb.from("corridas").select("*").order("n", { ascending: false }).limit(6),
       sb.from("backlog").select("*"),
       sb.from("aprobaciones").select("*"),
       sb.from("hilos").select("*").order("creado", { ascending: false }).limit(40),
       sb.from("senales").select("*").order("creado", { ascending: false }).limit(40),
+      sb.from("home").select("*"),
+      sb.from("layouts").select("*"),
+      sb.from("copys").select("*"),
     ]);
+
+  /* La maqueta vigente de cada sección: la del equipo si la editó, si no la que propuso el agente. */
+  const base = paginas?.find((p: any) => p.id === "home")?.data ?? {};
+  const maquetas = (base.HOME?.secciones ?? []).map((s: any) => {
+    const ov = layouts?.find((l: any) => (l.pagina ?? "home") === "home" && l.seccion === s.n);
+    const wire = base.WIRE?.[s.n] ?? {};
+    return {
+      seccion: s.n, titulo: s.t,
+      fondo: (ov?.fondo ?? wire.fondo) ?? "claro",
+      editada: !!ov,
+      bloques: (ov?.bloques?.length ? ov.bloques : wire.bloques ?? []).map((b: any) => [b.t, b.x, b.y, b.w, b.h]),
+      copy: {
+        ...(base.COPY_DEF?.[s.n] ?? {}),
+        ...(copys?.find((c: any) => (c.pagina ?? "home") === "home" && c.seccion === s.n)?.valores ?? {}),
+      },
+    };
+  });
 
   const n = (corridas?.[0]?.n ?? 0) + 1;
   const semana = `${new Date().getFullYear()}-W${String(
@@ -213,6 +234,7 @@ async function main() {
     .replace("{{CAPTURAS}}", JSON.stringify(capturadas, null, 1))
     .replace("{{CAIDAS}}", caidas.join("; ") || "ninguna")
     .replace("{{SEO}}", () => JSON.stringify(seoPorSitio, null, 1))
+    .replace("{{MAQUETAS}}", () => JSON.stringify(maquetas, null, 1))
     .replace("{{CREHANA}}", () => crehana);
 
   // Las capturas del hero de cada sitio entran como imágenes para que Claude las mire de verdad.
@@ -278,6 +300,24 @@ async function main() {
       origen: b.origen, corrida: String(n), estado: "pendiente",
     });
   }
+  /* Propuestas de estructura. Se guardan las de esta corrida y se dejan a lo sumo tres por sección:
+     más que eso deja de ser una decisión y pasa a ser una lista. */
+  for (const m of (salida.maquetas ?? []).slice(0, 3)) {
+    const slug = String(m.nombre ?? "propuesta").toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+    const { error } = await sb.from("variantes").upsert({
+      id: `home/${m.seccion}/${slug}`, pagina: "home", seccion: m.seccion,
+      nombre: m.nombre, apuesta: m.apuesta, contra: m.contra,
+      fondo: m.fondo ?? "claro", bloques: m.bloques ?? [], copy: m.copy ?? {},
+      corrida: String(n), creado: new Date().toISOString(),
+    });
+    if (error) { console.log(`⚠ variante ${m.seccion}: ${error.message}`); continue; }
+    const { data: viejas } = await sb.from("variantes").select("id,creado")
+      .eq("pagina", "home").eq("seccion", m.seccion).order("creado", { ascending: false });
+    const sobran = (viejas ?? []).slice(3).map((v: any) => v.id);
+    if (sobran.length) await sb.from("variantes").delete().in("id", sobran);
+  }
+
   /* El bloque de testimonios tiene id fijo: cada corrida lo reescribe en vez de apilar una entrada
      por semana, y sin tocar `estado` para no pisar lo que el equipo ya movió. */
   if (salida.testimonios?.copy) {

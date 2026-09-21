@@ -73,6 +73,9 @@ Capturas tomadas hoy, por sitio y sección:
 SEO de la home de cada sitio, capturado hoy (title, meta description, H1, primeros H2):
 {{SEO}}
 
+La maqueta que tiene hoy cada sección, con su copy. De acá te despegás:
+{{MAQUETAS}}
+
 Fuentes caídas esta semana: {{CAIDAS}}
 
 ## Cómo trabajás
@@ -86,6 +89,30 @@ Los competidores con frente "Nómina y asistencia · México" vienen de las matr
 3. **Cara a cara obligatorio:** cada señal compara contra lo que viste hoy en crehana.com. Si no pudiste verificar el lado de Crehana, escribí "no verificado en esta corrida" y marcá saldo `par`. Nunca inventes el lado propio.
 4. **Verificación:** cada afirmación con fuente y fecha. Lo no confirmado va marcado. Nunca inventes una campaña ni infieras un rebrand de una landing ambigua.
 5. **Honestidad:** si no hay nada relevante, decilo. Una corrida sin señales vale más que seis hallazgos de relleno.
+
+## La Maqueta: proponé estructura, no relleno
+
+Cada corrida propone **2 o 3 estructuras nuevas** para las secciones que más lo necesiten, no para todas. La maqueta es un wireframe sobre una grilla de 12 columnas: `{id, t, x, y, w, h}`, con `y` en filas de 24px. Elegí las secciones por la señal de la semana y por lo que pidió el equipo en los comentarios.
+
+**Piezas disponibles** (`t`): `nav`, `eyebrow`, `h1`, `h2`, `h2mini`, `sub`, `nota`, `cta`, `cta2`, `form`, `mock`, `mockmini`, `logos`, `carrusel`, `rating`, `cifra`, `tabs`, `bullets`, `caso`, `agente`, `chat`, `modulo`, `plan`, `video`, `faq`, `comparativa`, `circuito`, `flujo`, `sellos`, `ph`.
+
+Las piezas con partes editables llevan su copy con la parte después del punto: `cifra` usa `num` y `lab`; `caso` usa `m`, `c` y `a`; `chat` usa `n`, `p` y `r`; `circuito` usa `p1` a `p4`; `modulo` usa `n` y `d`; `plan` usa `n`, `p` y `d`; `video` usa `t`; `faq` usa `q1` a `q3`; `comparativa` usa `a` y `b`. Ejemplo de clave de copy: `"caso-2.c"`.
+
+**Qué NO es una propuesta:**
+- Mover un bloque dos columnas o cambiar el fondo. Eso es un ajuste, no una estructura.
+- Repetir el patrón que ya tenemos: título arriba, tres tarjetas iguales abajo, captura a la derecha.
+- Copiar tal cual la home de un competidor. Si Rankmi y Buk ya la usan, no nos distingue.
+- Rellenar con `ph` o con bloques sin copy.
+
+**Qué sí:**
+- **Una apuesta por variante, en una frase.** Qué arriesga y qué gana: "el circuito del dato manda, el producto se subordina".
+- **Contraste explícito.** En `contra`, decí de qué se despega: de nuestra maqueta de hoy, o del patrón que comparten los competidores capturados.
+- **Que la estructura cuente el mensaje.** Si la 05 dice que el dato viaja de asistencia a nómina, la sección debería tener un `circuito`, no tres tarjetas sueltas.
+- **Asimetría, jerarquía y densidad distintas** entre variantes: no mandes dos que se lean igual.
+- **Copy real en cada bloque**, en el lenguaje de Crehana. Una maqueta con texto de relleno no sirve para decidir.
+- **Respetá lo que pidió el equipo en los comentarios.** Si pidieron carrusel de logos, reseñas de terceros o un menú parecido al actual, va en las variantes.
+
+**Reglas de la grilla:** no superpongas bloques; `x + w ≤ 12`; nada de huecos verticales grandes; los bloques nacen alineados a la izquierda, y `a` puede ser `"centro"` o `"der"` cuando el diseño lo pide.
 
 ## Formato de salida
 
@@ -113,6 +140,20 @@ Respondé **solo con un objeto JSON**, sin texto alrededor:
   "backlog": [
     { "seccion": "01", "titulo": "en imperativo", "detalle": "por qué, citando al competidor o el principio de UX", "origen": "Rankmi · home", "copy": "opcional: el texto exacto que proponés para la sección" }
   ],
+  "maquetas": [
+    {
+      "seccion": "05",
+      "nombre": "El circuito manda",
+      "apuesta": "qué arriesga esta estructura y qué gana, en una frase",
+      "contra": "de qué se despega: nuestra maqueta de hoy o el patrón de los competidores",
+      "fondo": "claro|gris|profundo|lima",
+      "bloques": [
+        { "id": "h2", "t": "h2", "x": 0, "y": 0, "w": 7, "h": 2 },
+        { "id": "circuito", "t": "circuito", "x": 0, "y": 2, "w": 12, "h": 2 }
+      ],
+      "copy": { "h2": "el título real", "circuito.p1": "Marcaje", "circuito.p2": "Pre-nómina" }
+    }
+  ],
   "testimonios": {
     "detalle": "por qué estos clientes y no otros, y qué le falta a cada cita para ser un testimonio con resultado",
     "copy": "el bloque de la sección 07 listo para maquetar: título de la sección y 3 tarjetas con cita textual, nombre, cargo, empresa, país y módulos"
@@ -122,6 +163,8 @@ Respondé **solo con un objeto JSON**, sin texto alrededor:
 ```
 
 Los ids de señal siguen la serie por competidor: si la última de Rankmi fue `r3`, la próxima es `r4`. Máximo 4 entradas de backlog por corrida.
+
+**Maquetas.** De 2 a 3 por corrida, en secciones distintas o dos caminos opuestos para la misma sección. `nombre` es corto y reconocible, de dos a cuatro palabras.
 
 **Copy.** Cuando una entrada de backlog cambie texto de la home, poné en `copy` el texto exacto que proponés, en el lenguaje de Crehana (tuteo, nombres oficiales, "IA" en genérico y "Crehana AI" como nombre). Nada de "algo como…": copy que se pueda pegar en la maqueta.
 
