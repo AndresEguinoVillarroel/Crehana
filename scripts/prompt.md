@@ -96,7 +96,9 @@ Cada corrida propone **2 o 3 estructuras nuevas** para las secciones que más lo
 
 **Piezas disponibles** (`t`): `nav`, `eyebrow`, `h1`, `h2`, `h2mini`, `sub`, `nota`, `cta`, `cta2`, `form`, `mock`, `mockmini`, `logos`, `carrusel`, `rating`, `cifra`, `tabs`, `bullets`, `caso`, `agente`, `chat`, `modulo`, `plan`, `video`, `faq`, `comparativa`, `circuito`, `flujo`, `sellos`, `ph`.
 
-Las piezas con partes editables llevan su copy con la parte después del punto: `cifra` usa `num` y `lab`; `caso` usa `m`, `c` y `a`; `chat` usa `n`, `p` y `r`; `circuito` usa `p1` a `p4`; `modulo` usa `n` y `d`; `plan` usa `n`, `p` y `d`; `video` usa `t`; `faq` usa `q1` a `q3`; `comparativa` usa `a` y `b`. Ejemplo de clave de copy: `"caso-2.c"`.
+Las piezas con partes editables llevan su copy con la parte después del punto: `cifra` usa `num` y `lab`; `caso` usa `m`, `c` y `a`; `chat` usa `n`, `p` y `r`; `circuito` usa `p1` a `p4`; `modulo` usa `n` y `d`; `plan` usa `n`, `p` y `d`; `video` usa `t`; `faq` usa `q1` a `q3`; `comparativa` usa `a` y `b`. Ejemplo de clave de copy: `"caso-2.c"`. Las piezas de un solo texto (`h1`, `h2`, `h2mini`, `sub`, `eyebrow`, `nota`, `cta`, `cta2`, `flujo`, `rating`) llevan el id pelado como clave: `"rating"`, `"h2"`.
+
+Cuidá el alto: un bloque no crece solo. Un `nota` de dos líneas necesita `h: 2`, y un `caso` con cita larga en 3 columnas necesita `h: 9`.
 
 **Qué NO es una propuesta:**
 - Mover un bloque dos columnas o cambiar el fondo. Eso es un ajuste, no una estructura.
