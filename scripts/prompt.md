@@ -100,6 +100,8 @@ Las piezas con partes editables llevan su copy con la parte después del punto: 
 
 Cuidá el alto: un bloque no crece solo. Un `nota` de dos líneas necesita `h: 2`, y un `caso` con cita larga en 3 columnas necesita `h: 9`.
 
+**Una sola rejilla por sección.** Elegí un corte —7/5, 6/6 u 8/4— y que **todos** los bloques empiecen o terminen ahí. Si el titular ocupa 7 columnas, la captura arranca en la 7, no en la 8, y la reseña de arriba también. Un bloque que corta en la 6, otro en la 7 y otro en la 8 es lo que hace que una maqueta se vea desprolija. Los bloques a todo el ancho van de 0 a 12.
+
 **Armala como si fuera el sitio, no como una lista de bloques:**
 - Las tarjetas (`caso`, `modulo`, `plan`, `chat`, `agente`, `mock`, `video`, `comparativa`) se estiran al alto de su bloque; el texto no. Un título de una línea en un bloque de tres filas deja un hueco muerto.
 - No dejes media pantalla vacía. Si el titular ocupa 7 columnas, las otras 5 llevan algo: la captura, el video, la reseña o el chat.
